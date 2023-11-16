@@ -1,0 +1,60 @@
+{
+    "faculty": "Khoa",
+    "department": "Bộ môn",
+    "major": "Chuyên ngành",
+    "industry": "Ngành",
+    "student": "Sinh viên",
+    "registration_period": "Đợt đăng ký",
+    "student_join": "Đợt tham gia của sinh viên",
+    "notification": "Thông báo",
+    "group": "Nhóm",
+    "teacher": "Giảng viên",
+    "thesis": "Đề tài",
+
+    "field": {
+        "faculty": {
+            "dean": "Trưởng khoa"
+        },
+        "department": {
+            "faculty": "Khoa"
+        },
+        "major": {
+            "industry": "Ngành"
+        },
+        "industry": {
+            "faculty": "Khoa"
+        },
+        "student": {
+            "major": "Chuyên ngành",
+            "class": "Lớp"
+        },
+        "registration_period": {
+            "semester": "Học kỳ",
+            "phase": "Đợt",
+            "school_year": "Năm học"
+        },
+        "student_join": {
+            "registration_period": "Đợt tham gia",
+            "student": "Sinh viên"
+        },
+        "group": {
+            "count_member": "Thành viên",
+            "leader": "Trưởng nhóm",
+            "members": "Thành viên trong nhóm",
+            "score": "Điểm"
+        },
+        "teacher": {
+            "academic": "Học vị",
+            "degree": "Học hàm",
+            "type": "Chức vụ",
+            "department": "Bộ môn"
+        },
+        "thesis": {
+            "summary": "Mô tả",
+            "quantity": "Số lượng thành viên",
+            "instruction": "Giảng viên hướng dẫn",
+            "review": "Giảng viên phản biện",
+            "major": "Chuyên ngành phù hợp"
+        }
+    }
+}
