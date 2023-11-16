@@ -89,15 +89,16 @@ const MenuItem = (item: MenuItemType) => {
     };
 
     return (
-        <div className='my-1'>
+        <div className='my-2'>
             <Link
                 className={classNames(
-                    'flex align-items-center gap-2 h-3rem px-3 no-underline cursor-pointer transition-linear transition-duration-200 border-round-lg',
+                    'flex align-items-center gap-2 h-3rem px-3 no-underline cursor-pointer transition-linear transition-duration-200 border-round-3xl',
                     itemClassName,
                     {
-                        'hover:surface-hover': !active,
+                        'hover:bg-blue-200': !active,
                         'text-900': !active,
-                        'bg-highlight': active,
+                        'bg-white': !active,
+                        'bg-primary': active,
                         'p-highlight': active,
                     },
                 )}
@@ -107,7 +108,7 @@ const MenuItem = (item: MenuItemType) => {
                 <div className={classNames('p-1', iconClassName)}>
                     <Icon />
                 </div>
-                <p className={classNames('flex-1 text-sm font-semibold itemLabel m-0', labelClassName)}>{label}</p>
+                <p className={classNames('flex-1 text-sm itemLabel m-0', labelClassName)}>{label}</p>
 
                 {items && items.length > 0 && <i className='pi pi-chevron-down text-sm' />}
             </Link>

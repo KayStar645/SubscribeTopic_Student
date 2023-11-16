@@ -1,3 +1,15 @@
 .p-dropdown .p-dropdown-label.p-placeholder {
     height: 3rem !important;
 }
+
+.p-divider.p-divider-vertical:before {
+    border-left: 1px #dee2e6 solid !important;
+}
+
+.p-card-title {
+    font-size: 1.25rem !important;
+}
+
+.p-card {
+    border-radius: 12px !important;
+}
