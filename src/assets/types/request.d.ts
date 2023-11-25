@@ -9,6 +9,7 @@ interface MetaType {
 }
 
 interface ParamType {
+    id?: string | number;
     filters?: string;
     sorts?: string;
     page?: number;

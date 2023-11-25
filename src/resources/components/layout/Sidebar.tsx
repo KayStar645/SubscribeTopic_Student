@@ -13,6 +13,7 @@ import { Avatar } from 'primereact/avatar';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { useRef } from 'react';
 import { MenuItem } from '../UI';
+import { Divider } from 'primereact/divider';
 
 const Menu = ({ lng }: LanguageType) => {
     const { t } = useTranslation(lng);
@@ -54,7 +55,7 @@ const Menu = ({ lng }: LanguageType) => {
         <div className='flex flex-column gap-2 w-15rem h-screen relative ' style={{ zIndex: 1000 }}>
             <ul className='p-2 pt-0 overflow-y-auto h-full'>
                 <div
-                    className='flex align-items-center gap-2 hover:surface-hover cursor-pointer p-1 pr-3 bg-white mb-4'
+                    className='flex align-items-center gap-2 cursor-pointer p-1 pr-3 bg-white hover:bg-blue-200'
                     style={{ borderRadius: 9999 }}
                     onClick={(e) => userModalRef?.current?.toggle(e)}
                 >
@@ -66,6 +67,8 @@ const Menu = ({ lng }: LanguageType) => {
 
                     <i className='pi pi-angle-down ml-2' />
                 </div>
+
+                <Divider layout='horizontal' />
 
                 {auth &&
                     adminMenu.map((item) => <MenuItem key={item.code} item={item} permissions={auth?.permission} />)}

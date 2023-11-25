@@ -25,14 +25,6 @@ p {
     padding: 0 !important;
 }
 
-.bg-transparent {
-    background-color: transparent;
-}
-
-.bg-highlight {
-    background: var(--highlight-bg);
-}
-
 .p-datepicker-calendar tbody tr td span {
     text-align: center;
     margin: 0 auto;

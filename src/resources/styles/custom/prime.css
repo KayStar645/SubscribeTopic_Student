@@ -7,7 +7,8 @@
 }
 
 .p-card-title {
-    font-size: 1.25rem !important;
+    font-size: 1.3rem !important;
+    color: var(--surface-900);
 }
 
 .p-card {

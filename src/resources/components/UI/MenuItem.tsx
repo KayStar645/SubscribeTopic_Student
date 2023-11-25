@@ -1,14 +1,15 @@
 'use client';
 
 import { cookies } from '@assets/helpers';
-import { useDispatch, useSelector } from '@assets/redux';
-import { selectMenu } from '@assets/redux/slices/menu';
+import { useDispatch } from '@assets/redux';
 import menuSlice from '@assets/redux/slices/menu/slice';
 import { MenuItemType } from '@assets/types/menu';
+import { MenuSliceType } from '@assets/types/slice';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Ripple } from 'primereact/ripple';
 import { classNames } from 'primereact/utils';
+import qs from 'query-string';
 import { useState } from 'react';
 
 interface MenuItemProps {
@@ -30,52 +31,58 @@ const MenuItem = ({ item, permissions }: MenuItemProps) => {
         permission,
         checkPermission,
     } = item;
+
     const Icon = () => icon;
     const dispatch = useDispatch();
-    const menu = useSelector(selectMenu);
-    const active = code === menu.activeItem || code === menu.parent;
+    const params = useSearchParams();
+    const active = code === params.get('activeItem') || code === params.get('parent');
     const [isOpenMenu, setIsOpenMenu] = useState(false);
-    const checkChildPermission = cookies.checkChildPermission(item, permissions);
     const router = useRouter();
+    const checkChildPermission = cookies.checkChildPermission(item, permissions);
 
     const onClick = (currItem: MenuItemType) => {
+        let activeMenu: MenuSliceType = { activeItem: code, parent, openMenu: false };
+
         if (items && items.length > 0) {
             if (active) {
-                dispatch(
-                    menuSlice.actions.onItemClick({
-                        activeItem: '',
-                        parent: '',
-                        openMenu: isOpenMenu && menu.openMenu,
-                    }),
-                );
+                activeMenu = {
+                    activeItem: '',
+                    parent: '',
+                    openMenu: isOpenMenu && JSON.parse(params.get('openMenu') || 'false'),
+                };
+
                 setIsOpenMenu(false);
             } else {
-                dispatch(
-                    menuSlice.actions.onItemClick({
-                        activeItem: code,
-                        parent,
-                        openMenu: isOpenMenu && menu.openMenu,
-                    }),
-                );
+                activeMenu = {
+                    activeItem: code,
+                    parent,
+                    openMenu: isOpenMenu && JSON.parse(params.get('openMenu') || 'false'),
+                };
+
                 setIsOpenMenu(true);
             }
         } else if (parent) {
-            dispatch(
-                menuSlice.actions.onItemClick({
-                    activeItem: code,
-                    parent,
-                    openMenu: false,
-                }),
-            );
+            activeMenu = {
+                activeItem: code,
+                parent,
+                openMenu: false,
+            };
         } else {
-            dispatch(menuSlice.actions.onItemClick({ activeItem: code, parent, openMenu: false }));
             setIsOpenMenu(false);
         }
 
         onItemClick?.(currItem);
 
+        dispatch(menuSlice.actions.onItemClick(activeMenu));
+
         if (currItem.to) {
-            router.push(currItem.to);
+            if (checkPermission) {
+                router.push(currItem.to + '?' + qs.stringify(activeMenu));
+            } else {
+                router.push(currItem.to);
+            }
+        } else {
+            router.push('?' + qs.stringify(activeMenu));
         }
     };
 
@@ -93,7 +100,7 @@ const MenuItem = ({ item, permissions }: MenuItemProps) => {
                 (items && items.length > 0 && checkChildPermission && typeof permission !== 'undefined')) && (
                 <div
                     className={classNames(
-                        'flex align-items-center gap-2 h-3rem px-3 no-underline cursor-pointer transition-linear transition-duration-200 border-round-3xl',
+                        'flex align-items-center gap-2 h-3rem px-3 no-underline cursor-pointer transition-linear transition-duration-200 border-round-3xl p-ripple',
                         itemClassName,
                         {
                             'hover:bg-blue-200': !active,
@@ -114,20 +121,24 @@ const MenuItem = ({ item, permissions }: MenuItemProps) => {
                     <p className={classNames('flex-1 text-sm itemLabel m-0', labelClassName)}>{label}</p>
 
                     {items && items.length > 0 && checkChildPermission && <i className='pi pi-chevron-down text-sm' />}
+
+                    <Ripple />
                 </div>
             )}
 
             {items && items.length && (
                 <motion.div
                     animate={
-                        (isOpenMenu && active) || (isOpenMenu && menu.openMenu) || parent === menu.parent
+                        (isOpenMenu && active) ||
+                        (isOpenMenu && JSON.parse(params.get('openMenu') || 'false')) ||
+                        parent === params.get('parent')
                             ? { height: 'auto' }
                             : { height: 0 }
                     }
                     transition={{ duration: 0.3 }}
-                    className={classNames('overflow-hidden border-left-1 border-300 subMenu')}
+                    className={classNames('overflow-hidden border-left-1 border-300 subMenu mt-1')}
                 >
-                    {<SubItem />}
+                    <SubItem />
                 </motion.div>
             )}
         </div>

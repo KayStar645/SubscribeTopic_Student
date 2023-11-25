@@ -16,6 +16,7 @@ import { PrimeIcons } from 'primereact/api';
 import { Button } from 'primereact/button';
 import { Image } from 'primereact/image';
 import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
 const schema = (t: TFunction) =>
@@ -51,6 +52,11 @@ const Page = ({ params: { lng } }: PageProps) => {
                         return;
                     }
 
+                    if (tokenData.type !== 'student') {
+                        toast.error(t('request:invalid_user'));
+                        return;
+                    }
+
                     if (faculty) {
                         tokenData.faculty = faculty;
                     }
@@ -63,7 +69,7 @@ const Page = ({ params: { lng } }: PageProps) => {
                         expires: new Date(tokenData.exp * 1000),
                     });
 
-                    router.push(language.addPrefixLanguage(lng, ROUTES.admin.home));
+                    router.push(language.addPrefixLanguage(lng, ROUTES.home.index));
                 } catch (error) {}
             },
         });
@@ -72,7 +78,7 @@ const Page = ({ params: { lng } }: PageProps) => {
     return (
         <div className='flex align-items-center justify-content-center h-full w-full p-0'>
             <div className='flex flex-wrap shadow-2 w-full border-round-2xl overflow-hidden'>
-                <Loader show={signInMutation.isLoading} />
+                <Loader show={signInMutation.isSuccess} />
 
                 <div className='w-full lg:w-6 p-4 lg:p-7 bg-blue-50'>
                     <div className='pb-3'>

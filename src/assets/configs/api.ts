@@ -15,12 +15,12 @@ const API = {
         notification: '/notification',
         group: '/group',
         thesis: '/thesis',
+    },
 
-        detail: {
-            notification: '/notification/detail',
-            group: '/group/detail',
-            thesis: '/thesis/detail',
-        },
+    detail: {
+        notification: '/notification/detail',
+        group: '/group/detail',
+        thesis: '/thesis/detail',
     },
 };
 

@@ -52,6 +52,8 @@ addLocale('vi', {
 
 const primeReactValue: Partial<APIOptions> = {
     ripple: true,
+    hideOverlaysOnDocumentScrolling: true,
+    cssTransition: true,
 };
 
 export default function RootLayout({ children, params: { lng } }: PageProps) {
