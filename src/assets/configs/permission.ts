@@ -59,7 +59,7 @@ const PERMISSION = {
         update: 'Group.Update',
         delete: 'Group.Delete',
     },
-    thesis: {
+    topic: {
         view: 'Thesis.View',
         create: 'Thesis.Create',
         update: 'Thesis.Update',
@@ -71,6 +71,13 @@ const PERMISSION = {
         update: 'Role.Update',
         delete: 'Role.Delete',
     },
+    permission: {
+        view: 'Permission.View',
+    },
+    account: {
+        view: 'Account.View',
+        create: 'Account.Create',
+    },
 };
 
 const ACTION = {
@@ -79,6 +86,7 @@ const ACTION = {
     create: 'Create',
     remove: 'Delete',
     change: 'Change',
+    assign: 'Assign',
 };
 
 export { PERMISSION, ACTION };

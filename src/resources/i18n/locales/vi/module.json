@@ -49,7 +49,12 @@
             "count_member": "Thành viên",
             "leader": "Trưởng nhóm",
             "members": "Thành viên trong nhóm",
-            "score": "Điểm"
+            "score": "Điểm",
+            "news": "Bảng tin",
+            "exercise": "Bài tập trên lớp",
+            "member": "Thành viên",
+            "due_soon": "Sắp đến hạn",
+            "no_due_soon": "Không bài tập nào sắp đến hạn"
         },
         "teacher": {
             "academic": "Học vị",
@@ -65,6 +70,9 @@
             "major": "Chuyên ngành phù hợp",
             "lecturer": "Giảng viên ra đề"
         },
-        "role": {}
+        "role": {},
+        "notification": {
+            "recent": "Thông báo gần đây"
+        }
     }
 }

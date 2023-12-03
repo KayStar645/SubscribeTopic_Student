@@ -43,5 +43,10 @@
     "summary": "Mô tả",
     "max": "Tối đa",
     "min": "Tối thiểu",
-    "hello": "Xin chào"
+    "hello": "Xin chào",
+    "invite": "Lời mời",
+    "general": "Chung",
+    "by_faculty": "Theo khoa",
+    "type_of": "Loại {{ obj }}",
+    "see_all": "Xem tất cả"
 }

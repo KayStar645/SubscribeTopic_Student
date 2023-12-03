@@ -41,6 +41,10 @@ request.interceptors.request.use(
                 config.params = {};
             }
 
+            if (config.params && config.params.removeFacultyId) {
+                break;
+            }
+
             if (config.method === 'get') {
                 config.params.facultyId = auth?.faculty?.Id;
             }

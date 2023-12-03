@@ -1,20 +1,21 @@
 'use client';
 
-import { PageProps } from '@assets/types/UI';
-import { Card } from 'primereact/card';
-import { Ripple } from 'primereact/ripple';
-import { createContext, useState } from 'react';
-import NotificationTab from './tab/Notification';
-import InviteTab from './tab/Invite';
-import { classNames } from 'primereact/utils';
-import { useQuery } from '@tanstack/react-query';
-import { NotificationType } from '@assets/interface';
-import { API, ROUTES } from '@assets/configs';
-import { language, request } from '@assets/helpers';
-import { Loader } from '@resources/components/UI';
-import { Image } from 'primereact/image';
-import Link from 'next/link';
+import { ROUTES } from '@assets/configs';
+import { language } from '@assets/helpers';
 import { useGetList } from '@assets/hooks/useGet';
+import { NotificationParamType, NotificationType } from '@assets/interface';
+import { PageProps } from '@assets/types/UI';
+import { Loader } from '@resources/components/UI';
+import { useTranslation } from '@resources/i18n';
+import Link from 'next/link';
+import { Card } from 'primereact/card';
+import { Image } from 'primereact/image';
+import { Ripple } from 'primereact/ripple';
+import { classNames } from 'primereact/utils';
+import { createContext, useState } from 'react';
+import InviteTab from './tab/Invite';
+import NotificationTab from './tab/Notification';
+import moment from 'moment';
 
 interface NotificationPageContextType {
     lng: string;
@@ -26,10 +27,17 @@ const NotificationPageContext = createContext<NotificationPageContextType>({
 
 const NotificationPage = ({ params: { lng } }: PageProps) => {
     const [tab, setTab] = useState<'NT' | 'IV'>('NT');
+    const { t } = useTranslation(lng);
+    const { isLoading, data } = useGetList<NotificationType, NotificationParamType>({
+        module: 'notification',
+        params: {
+            filters: `lastModifiedDate>=${moment().subtract({ day: 7 }).format('yyyy-MM-DD')}`,
+        },
+    });
+
     const value = {
         lng,
     };
-    const { isLoading, data } = useGetList<NotificationType>({ module: 'notification' });
 
     return (
         <NotificationPageContext.Provider value={value}>
@@ -43,7 +51,7 @@ const NotificationPage = ({ params: { lng } }: PageProps) => {
                             })}
                             onClick={() => setTab('NT')}
                         >
-                            Thông báo
+                            {t('common:notification')}
                             <Ripple />
                         </div>
 
@@ -54,20 +62,18 @@ const NotificationPage = ({ params: { lng } }: PageProps) => {
                             })}
                             onClick={() => setTab('IV')}
                         >
-                            Lời mời
+                            {t('common:invite')}
                             <Ripple />
                         </div>
                     </div>
 
-                    <Card className='relative overflow-hidden'>
-                        {tab == 'NT' && <NotificationTab />}
+                    {tab == 'NT' && <NotificationTab />}
 
-                        {tab == 'IV' && <InviteTab />}
-                    </Card>
+                    {tab == 'IV' && <InviteTab />}
                 </div>
 
                 <div className='col-5'>
-                    <Card title='Thông báo mới trong tuần' className='relative overflow-hidden'>
+                    <Card title={t('module:field.notification.recent')} className='relative overflow-hidden'>
                         <Loader show={isLoading} />
 
                         <div className='flex flex-column gap-5'>
@@ -80,15 +86,21 @@ const NotificationPage = ({ params: { lng } }: PageProps) => {
                                         className='shadow-3 border-round'
                                     />
 
-                                    <Link
-                                        href={language.addPrefixLanguage(
-                                            lng,
-                                            `${ROUTES.information.notification}/${notification.id}`,
-                                        )}
-                                        className='text-900 font-semibold no-underline hover:text-primary'
-                                    >
-                                        {notification.name}
-                                    </Link>
+                                    <div className='flex flex-column justify-content-between flex-1'>
+                                        <Link
+                                            href={language.addPrefixLanguage(
+                                                lng,
+                                                `${ROUTES.information.notification}/${notification.id}`,
+                                            )}
+                                            className='text-900 font-semibold no-underline hover:text-primary'
+                                        >
+                                            {notification.name}
+                                        </Link>
+
+                                        <p className='text-right text-xs'>
+                                            {moment(notification.lastModifiedDate).format('DD/MM/YYYY')}
+                                        </p>
+                                    </div>
                                 </div>
                             ))}
                         </div>

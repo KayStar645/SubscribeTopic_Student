@@ -1,5 +1,7 @@
+import { Card } from 'primereact/card';
+
 const InviteTab = () => {
-    return <div></div>;
+    return <Card></Card>;
 };
 
 export default InviteTab;

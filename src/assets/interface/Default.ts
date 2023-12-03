@@ -5,6 +5,7 @@ interface GeneralType {
     phoneNumber?: string;
     address?: string;
     email?: string;
+    lastModifiedDate?: Date;
 }
 
 export type { GeneralType };

@@ -16,7 +16,8 @@ interface ParamType {
     pageSize?: number;
     isAllDetail?: boolean;
     facultyId?: string | number;
-    IsGetFaculty?: boolean;
+    isGetFaculty?: boolean;
+    removeFacultyId?: boolean;
 }
 
 interface ResponseType<dataType = any> {
