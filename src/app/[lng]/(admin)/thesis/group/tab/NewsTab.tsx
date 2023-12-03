@@ -1,34 +1,12 @@
 import GroupBackgroundImg from '@resources/image/layout/img_group_bg.jpg';
-import { useContext, useMemo } from 'react';
-import { GroupPageContext } from '../page';
-import { SpeedDial } from 'primereact/speeddial';
-import { Tooltip } from 'primereact/tooltip';
 import { Button } from 'primereact/button';
+import { OverlayPanel } from 'primereact/overlaypanel';
+import { useContext, useMemo, useRef, useState } from 'react';
+import { GroupPageContext } from '../page';
 
 const NewsTab = () => {
     const { t } = useContext(GroupPageContext);
-
-    const ITEMS = useMemo(
-        () => [
-            {
-                label: 'Add',
-                icon: 'pi pi-pencil',
-            },
-            {
-                label: 'Update',
-                icon: 'pi pi-refresh',
-            },
-            {
-                label: 'Delete',
-                icon: 'pi pi-trash',
-            },
-            {
-                label: 'React Website',
-                icon: 'pi pi-external-link',
-            },
-        ],
-        [],
-    );
+    const menuProps = useRef<OverlayPanel>(null);
 
     return (
         <div
@@ -61,22 +39,23 @@ const NewsTab = () => {
             <div className='mt-3 flex gap-3'>
                 <div className='w-16rem flex flex-column gap-3'>
                     <div className='shadow-1 border-round p-3 bg-white'>
-                        <div className='flex align-items-center justify-content-between relative'>
+                        <div className='flex align-items-center justify-content-between'>
                             <p className='font-semibold'>
                                 {t('common:code_of', { obj: t('module:group').toLowerCase() })}
                             </p>
 
-                            <Tooltip target='.group-action .p-speeddial-action' position='right' />
-                            <SpeedDial
-                                model={ITEMS}
-                                radius={120}
-                                direction='down'
-                                showIcon='pi pi-ellipsis-v'
-                                hideIcon='pi pi-ellipsis-v'
-                                className='group-action'
-                                buttonClassName='p-button-secondary p-button-icon-only p-button-text p-button-rounded w-3rem h-3rem'
-                                style={{ top: '-66%', right: -12 }}
+                            <Button
+                                icon='pi pi-ellipsis-v'
+                                outlined={true}
+                                rounded={true}
+                                text={true}
+                                className='text-900'
+                                onClick={(e) => menuProps.current?.toggle(e)}
                             />
+
+                            <OverlayPanel ref={menuProps}>
+                                <div className='p-3'>Chưa biết thêm gì hết</div>
+                            </OverlayPanel>
                         </div>
 
                         <p className='mt-3 font-semibold text-2xl text-blue-600'>if62qsx</p>
