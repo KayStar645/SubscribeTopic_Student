@@ -32,6 +32,7 @@ const NotificationTab = () => {
             header={
                 <div className='px-3 pt-4'>
                     <Dropdown
+                        id='noti_type'
                         row={true}
                         label={t('common:type_of', { obj: t('module:notification').toLowerCase() })}
                         value={notiType}
@@ -51,7 +52,12 @@ const NotificationTab = () => {
 
                 {data?.map((notification) => (
                     <div key={notification.id} className='flex gap-3 cursor-pointer'>
-                        <Image src={notification.image} alt='hi' width='150' className='shadow-3 border-round' />
+                        <Image
+                            src={notification.image?.path}
+                            alt='hi'
+                            width='100'
+                            imageClassName='shadow-3 border-round'
+                        />
 
                         <div className='flex flex-column justify-content-between flex-1'>
                             <Link

@@ -1,20 +1,22 @@
+import { ROUTES } from '@assets/configs';
+import { Editor } from '@resources/components/form';
 import GroupBackgroundImg from '@resources/image/layout/img_group_bg.jpg';
+import Link from 'next/link';
+import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { OverlayPanel } from 'primereact/overlaypanel';
-import { useContext, useMemo, useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { GroupPageContext } from '../page';
+import { language } from '@assets/helpers';
 
 const NewsTab = () => {
-    const { t } = useContext(GroupPageContext);
+    const { t, lng } = useContext(GroupPageContext);
     const menuProps = useRef<OverlayPanel>(null);
+    const [showEdit, setShowEdit] = useState(false);
+    const [content, setContent] = useState('');
 
     return (
-        <div
-            style={{
-                width: 1000,
-                margin: '0 auto',
-            }}
-        >
+        <div>
             <div
                 className='border-round-xl flex flex-column justify-content-between p-3'
                 style={{
@@ -74,14 +76,79 @@ const NewsTab = () => {
                     </div>
                 </div>
 
-                <div className='flex-1'>
-                    <div className='shadow-1 border-round px-4 py-3 bg-white flex align-items-center gap-3 cursor-pointer hover:bg-blue-50'>
-                        <Button icon='pi pi-book' rounded={true} />
+                <div className='flex-1 flex flex-column gap-3'>
+                    {showEdit ? (
+                        <div className='shadow-1 border-round px-4 py-3 bg-white'>
+                            <Editor
+                                id='content'
+                                config={{
+                                    toolbar: [
+                                        'undo',
+                                        'redo',
+                                        '|',
+                                        'bold',
+                                        'italic',
+                                        'underline',
+                                        'strikethrough',
+                                        '|',
+                                        'subscript',
+                                        'superscript',
+                                        '|',
+                                        'link',
+                                        'unlink',
+                                        '|',
+                                        'numberedList',
+                                        'bulletedList',
+                                        '|',
+                                        'heading',
+                                        '|',
+                                        'alignment',
+                                        'fontFamily',
+                                        'fontSize',
+                                        'fontColor',
+                                        'fontBackgroundColor',
+                                    ],
+                                }}
+                                value={content}
+                                onChange={(e) => setContent(e)}
+                            />
 
-                        <div className='flex flex-column gap-2'>
-                            <p className='font-semibold text-sm text-900'>Ngô Văn Sơn đã đăng 1 bài tập mới: BT1</p>
-                            <p className='text-sm text-700'>23 Thg 2 12:00</p>
+                            <div className='flex align-items-center justify-content-end mt-3 gap-3'>
+                                <Button
+                                    label={t('common:cancel')}
+                                    size='small'
+                                    severity='secondary'
+                                    text={true}
+                                    onClick={() => {
+                                        setContent('');
+                                        setShowEdit(false);
+                                    }}
+                                />
+                                <Button label={t('common:post')} size='small' disabled={!content} />
+                            </div>
                         </div>
+                    ) : (
+                        <div
+                            className='shadow-1 border-round px-4 py-3 bg-white flex align-items-center gap-3 cursor-pointer hover:bg-blue-50 hover:text-primary'
+                            onClick={() => setShowEdit(true)}
+                        >
+                            <Avatar icon='pi pi-user' className='bg-primary text-white border-circle' size='large' />
+                            <p>{t('module:field.group.add_content')}</p>
+                        </div>
+                    )}
+
+                    <div>
+                        <Link
+                            href={`${language.addPrefixLanguage(lng, ROUTES.external.exercise)}/2`}
+                            className='shadow-1 border-round px-4 py-3 bg-white flex align-items-center gap-3 cursor-pointer flex-1 no-underline hover:bg-blue-50'
+                        >
+                            <Button icon='pi pi-book' rounded={true} />
+
+                            <div className='flex flex-column gap-2'>
+                                <p className='font-semibold text-sm text-900'>Ngô Văn Sơn đã đăng 1 bài tập mới: BT1</p>
+                                <p className='text-sm text-700'>23 Thg 2 12:00</p>
+                            </div>
+                        </Link>
                     </div>
                 </div>
             </div>

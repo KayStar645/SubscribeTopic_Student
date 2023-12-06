@@ -11,6 +11,7 @@ const Editor = ({
     row = false,
     required = false,
     errorMessage,
+    config,
     onChange = () => {},
 }: EditorProps) => {
     const [inputValue, setInputValue] = useState(value.toString());
@@ -38,6 +39,9 @@ const Editor = ({
                 <CKEditor
                     editor={EditorContainer}
                     data={inputValue}
+                    config={{
+                        ...config,
+                    }}
                     onChange={(event, editor) => {
                         const data = editor.getData();
 

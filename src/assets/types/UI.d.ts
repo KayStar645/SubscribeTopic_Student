@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
 
 interface PageProps {
-    params: any;
+    params: {
+        [key: string]: any;
+    };
     searchParams?: any;
     children?: ReactNode;
 }

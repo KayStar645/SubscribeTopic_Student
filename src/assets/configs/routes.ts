@@ -15,6 +15,10 @@ const ROUTES = {
         topic: '/thesis/topic',
     },
 
+    external: {
+        exercise: '/thesis/group/exercise',
+    },
+
     auth: {
         sign_in: '/auth/sign-in',
     },

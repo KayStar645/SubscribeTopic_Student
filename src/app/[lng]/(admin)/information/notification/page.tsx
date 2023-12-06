@@ -80,10 +80,10 @@ const NotificationPage = ({ params: { lng } }: PageProps) => {
                             {data?.map((notification) => (
                                 <div key={notification.id} className='flex gap-3 cursor-pointer'>
                                     <Image
-                                        src={notification.image}
+                                        src={notification.image?.path}
                                         alt='hi'
-                                        width='150'
-                                        className='shadow-3 border-round'
+                                        width='100'
+                                        imageClassName='shadow-3 border-round'
                                     />
 
                                     <div className='flex flex-column justify-content-between flex-1'>

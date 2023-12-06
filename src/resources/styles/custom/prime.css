@@ -14,3 +14,15 @@
 .p-card {
     border-radius: 12px !important;
 }
+
+.p-inplace .p-inplace-display {
+    padding: 0;
+    border-radius: 0;
+    transition: none;
+}
+
+.p-panel .p-panel-content {
+    padding: 0;
+    border: none;
+    border-radius: 0;
+}

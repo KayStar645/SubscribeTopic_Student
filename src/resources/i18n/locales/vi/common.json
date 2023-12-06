@@ -48,5 +48,6 @@
     "general": "Chung",
     "by_faculty": "Theo khoa",
     "type_of": "Loại {{ obj }}",
-    "see_all": "Xem tất cả"
+    "see_all": "Xem tất cả",
+    "post": "Đăng lên"
 }

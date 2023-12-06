@@ -54,7 +54,8 @@
             "exercise": "Bài tập trên lớp",
             "member": "Thành viên",
             "due_soon": "Sắp đến hạn",
-            "no_due_soon": "Không bài tập nào sắp đến hạn"
+            "no_due_soon": "Không bài tập nào sắp đến hạn",
+            "add_content": "Thông báo nội dung nào đó cho lớp học của bạn"
         },
         "teacher": {
             "academic": "Học vị",

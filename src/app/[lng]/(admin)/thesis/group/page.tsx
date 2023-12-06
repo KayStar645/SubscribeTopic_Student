@@ -12,10 +12,12 @@ import MemberTab from './tab/MemberTab';
 
 type GroupPageContextType = {
     t: TFunction;
+    lng: string;
 };
 
 const GroupPageContext = createContext<GroupPageContextType>({
     t: defaultT,
+    lng: 'vi',
 });
 
 const GroupPage = ({ params: { lng } }: PageProps) => {
@@ -42,6 +44,7 @@ const GroupPage = ({ params: { lng } }: PageProps) => {
 
     const value: GroupPageContextType = {
         t,
+        lng,
     };
 
     return (
@@ -64,7 +67,13 @@ const GroupPage = ({ params: { lng } }: PageProps) => {
                 ))}
             </div>
 
-            <div className='mt-3'>
+            <div
+                className='mt-3'
+                style={{
+                    maxWidth: 1000,
+                    margin: '0 auto',
+                }}
+            >
                 {activeTab === 'news' && <NewsTab />}
                 {activeTab === 'exercise' && <ExerciseTab />}
                 {activeTab === 'member' && <MemberTab />}
