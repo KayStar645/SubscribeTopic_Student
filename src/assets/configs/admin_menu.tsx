@@ -43,12 +43,11 @@ const ADMIN_MENU = (t: TFunction, lng: string): MenuItemType[] => {
             to: '',
             items: [
                 {
-                    code: 'topic',
+                    code: 'register_topic',
                     parent: 'thesis',
-                    label: t('menu:topic'),
-                    to: `/${lng}/${ROUTES.thesis.topic}`,
-                    permission: PERMISSION.topic.view,
-                    checkPermission: true,
+                    label: t('menu:register_topic'),
+                    to: `/${lng}/${ROUTES.thesis.register_topic}`,
+                    checkPermission: false,
                 },
                 {
                     code: 'group',
@@ -56,14 +55,6 @@ const ADMIN_MENU = (t: TFunction, lng: string): MenuItemType[] => {
                     label: t('menu:group'),
                     to: `/${lng}/${ROUTES.thesis.group}`,
                     permission: PERMISSION.group.view,
-                    checkPermission: true,
-                },
-                {
-                    code: 'student_join',
-                    parent: 'thesis',
-                    label: t('menu:student_join'),
-                    to: `/${lng}/${ROUTES.thesis.student_join}`,
-                    permission: PERMISSION.studentJoin.view,
                     checkPermission: true,
                 },
             ],

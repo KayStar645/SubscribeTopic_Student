@@ -12,7 +12,7 @@ const ROUTES = {
     thesis: {
         group: '/thesis/group',
         student_join: '/thesis/student_join',
-        topic: '/thesis/topic',
+        register_topic: '/thesis/register_topic',
     },
 
     external: {

@@ -6,6 +6,7 @@ interface NotificationType extends GeneralType {
     describe?: string;
     content?: string;
     image?: FileType;
+    lastModifiedDate?: Date;
     images?: FileType[];
 }
 

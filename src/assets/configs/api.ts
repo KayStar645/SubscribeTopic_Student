@@ -3,18 +3,29 @@ const API = {
         sign_in: '/account/login',
     },
 
-    admin: {
+    list: {
         faculty: '/faculty',
+
         teacher: '/teacher',
+
         department: '/department',
+
         major: '/major',
+
         industry: '/industry',
+
         student: '/student',
+
         registration_period: '/registrationPeriod',
+
         student_join: '/studentJoin',
+
         notification: '/notification',
+
         group: '/group',
+
         thesis: '/thesis',
+        register_topic: '/thesis/listThesisRegistration',
     },
 
     detail: {

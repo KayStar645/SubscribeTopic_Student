@@ -1,3 +1,5 @@
+'use client';
+
 import { DropdownProps } from '@assets/types/form';
 import { Dropdown as PrimeDropdown } from 'primereact/dropdown';
 import { classNames } from 'primereact/utils';
@@ -14,6 +16,7 @@ const Dropdown = ({
     optionValue = 'value',
     emptyMessage = 'No results found',
     errorMessage,
+    showClear = false,
     onChange = () => {},
 }: DropdownProps) => {
     const [selected, setSelected] = useState(value);
@@ -38,6 +41,7 @@ const Dropdown = ({
                 )}
 
                 <PrimeDropdown
+                    showClear={showClear}
                     emptyMessage={emptyMessage}
                     inputId={id}
                     options={options}

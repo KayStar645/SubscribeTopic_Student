@@ -76,11 +76,7 @@ const MenuItem = ({ item, permissions }: MenuItemProps) => {
         dispatch(menuSlice.actions.onItemClick(activeMenu));
 
         if (currItem.to) {
-            if (checkPermission) {
-                router.push(currItem.to + '?' + qs.stringify(activeMenu));
-            } else {
-                router.push(currItem.to);
-            }
+            router.push(currItem.to + '?' + qs.stringify(activeMenu));
         } else {
             router.push('?' + qs.stringify(activeMenu));
         }

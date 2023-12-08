@@ -41,10 +41,6 @@ request.interceptors.request.use(
                 config.params = {};
             }
 
-            if (config.params && config.params.removeFacultyId) {
-                break;
-            }
-
             if (config.method === 'get') {
                 config.params.facultyId = auth?.faculty?.Id;
             }
@@ -138,8 +134,30 @@ const handleSort = (sorts: OptionType | undefined, params: ParamType): string =>
     return result;
 };
 
+const handleFilter = (
+    original: string | undefined,
+    field: string,
+    operator: '>' | '@=' | '==',
+    value: string | number | undefined,
+) => {
+    let filters = original?.split(', ') || [];
+
+    filters = filters.filter((t) => t != '');
+    let index = filters.findIndex((t) => t.includes(field + operator));
+
+    if (filters.length > 0 && index > -1) {
+        filters.splice(index, 1);
+    }
+
+    if (value) {
+        filters.push(field + operator + value);
+    }
+
+    return filters.join(', ') || '';
+};
+
 const currentPage = (page: number | undefined) => {
     return page ? page - 1 : 0;
 };
 
-export { currentPage, defaultMeta, get, handleSort, post, remove, update };
+export { currentPage, defaultMeta, get, handleFilter, handleSort, post, remove, update };

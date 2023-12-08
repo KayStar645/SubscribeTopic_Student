@@ -1,7 +1,7 @@
 import { OptionType } from '@assets/types/common';
 import { TFunction } from 'i18next';
 
-const genders = (t: TFunction): OptionType[] => [
+const GENDER = (t: TFunction): OptionType[] => [
     {
         label: t('male'),
         value: t('male'),
@@ -16,7 +16,7 @@ const genders = (t: TFunction): OptionType[] => [
     },
 ];
 
-const semesters = (t: TFunction): OptionType[] => [
+const SEMESTER = (t: TFunction): OptionType[] => [
     {
         label: t('semester', { number: 1 }),
         value: t('semester', { number: 1 }),
@@ -31,7 +31,7 @@ const semesters = (t: TFunction): OptionType[] => [
     },
 ];
 
-const dateFilters = (t: TFunction): OptionType[] => [
+const DATE_FILTER = (t: TFunction): OptionType[] => [
     {
         label: t('request:filter_date_created_down'),
         value: 0,
@@ -46,7 +46,7 @@ const dateFilters = (t: TFunction): OptionType[] => [
     },
 ];
 
-const academics = (t: TFunction): OptionType[] => [
+const ACADEMIC = (t: TFunction): OptionType[] => [
     {
         label: t('info:academic.bachelor'),
         value: t('info:academic.bachelor'),
@@ -65,7 +65,7 @@ const academics = (t: TFunction): OptionType[] => [
     },
 ];
 
-const degrees = (t: TFunction): OptionType[] => [
+const DEGREE = (t: TFunction): OptionType[] => [
     {
         label: t('info:degree.associate_professor'),
         value: t('info:degree.associate_professor'),
@@ -76,7 +76,7 @@ const degrees = (t: TFunction): OptionType[] => [
     },
 ];
 
-const employeeTypes = (t: TFunction): OptionType[] => [
+const USER_TYPE = (t: TFunction): OptionType[] => [
     {
         label: t('info:employee_type.teacher'),
         value: 'L',
@@ -87,4 +87,10 @@ const employeeTypes = (t: TFunction): OptionType[] => [
     },
 ];
 
-export { genders, semesters, dateFilters, academics, degrees, employeeTypes };
+const THESIS_STATUS = (t: TFunction) => ({
+    A: t('common:approve'),
+    AR: t('common:approve_request'),
+    D: t('common:draft'),
+});
+
+export { GENDER, SEMESTER, DATE_FILTER, ACADEMIC, DEGREE, USER_TYPE, THESIS_STATUS };

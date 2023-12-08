@@ -11,6 +11,7 @@ const list = (params: any) => ({
     thesis: ['thesis', 'list', params],
     role: ['roles', 'list', params],
     student_join: ['student_joins', 'list', params],
+    register_topic: ['register_topics', 'list', params],
 });
 
 const detail = () => ({

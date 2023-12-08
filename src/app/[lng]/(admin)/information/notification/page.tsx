@@ -77,7 +77,7 @@ const NotificationPage = ({ params: { lng } }: PageProps) => {
                         <Loader show={isLoading} />
 
                         <div className='flex flex-column gap-5'>
-                            {data?.map((notification) => (
+                            {data?.data?.map((notification) => (
                                 <div key={notification.id} className='flex gap-3 cursor-pointer'>
                                     <Image
                                         src={notification.image?.path}
