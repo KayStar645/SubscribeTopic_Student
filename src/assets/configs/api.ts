@@ -15,6 +15,7 @@ const API = {
         industry: '/industry',
 
         student: '/student',
+        student_by_period: 'student/listStudentOfPeriodCurrent',
 
         registration_period: '/registrationPeriod',
 
@@ -26,6 +27,8 @@ const API = {
 
         thesis: '/thesis',
         register_topic: '/thesis/listThesisRegistration',
+
+        invitation: '/invitation',
     },
 
     detail: {

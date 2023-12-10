@@ -1,5 +1,5 @@
 interface GeneralType {
-    id?: string | number;
+    id?: number;
     name?: string;
     internalCode?: string;
     phoneNumber?: string;

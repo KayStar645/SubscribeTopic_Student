@@ -78,6 +78,12 @@ const PERMISSION = {
         view: 'Account.View',
         create: 'Account.Create',
     },
+    invite: {
+        view: 'Invitation.View',
+        create: 'Invitation.Create',
+        update: 'Invitation.Update',
+        delete: 'Invitation.Delete',
+    },
 };
 
 const ACTION = {

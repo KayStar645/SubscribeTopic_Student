@@ -12,6 +12,7 @@ interface GroupType extends GeneralType {
 
 interface GroupParamType extends ParamType {
     isGetLeader?: boolean;
+    isGetGroupMe?: boolean;
 }
 
 export type { GroupParamType, GroupType };

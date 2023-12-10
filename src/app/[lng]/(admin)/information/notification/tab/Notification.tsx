@@ -1,22 +1,21 @@
-import { AUTH_TOKEN, ROUTES } from '@assets/configs';
+import { ROUTES } from '@assets/configs';
 import { language } from '@assets/helpers';
 import { useGetList } from '@assets/hooks/useGet';
-import { AuthType, NotificationParamType, NotificationType } from '@assets/interface';
+import { NotificationParamType, NotificationType } from '@assets/interface';
 import { Loader } from '@resources/components/UI';
+import { Dropdown } from '@resources/components/form';
+import { useTranslation } from '@resources/i18n';
+import moment from 'moment';
 import Link from 'next/link';
+import { Card } from 'primereact/card';
 import { Image } from 'primereact/image';
 import { useContext, useState } from 'react';
 import { NotificationPageContext } from '../page';
-import useCookies from '@assets/hooks/useCookies';
-import { Dropdown } from '@resources/components/form';
-import { useTranslation } from '@resources/i18n';
-import { Card } from 'primereact/card';
-import moment from 'moment';
+import CustomImage from '@resources/components/UI/Image';
 
 const NotificationTab = () => {
-    const [auth] = useCookies<AuthType>(AUTH_TOKEN);
     const [notiType, setNotiType] = useState('F');
-    const { isLoading, data } = useGetList<NotificationType, NotificationParamType>({
+    const { isLoading, response } = useGetList<NotificationType, NotificationParamType>({
         module: 'notification',
         params: {
             removeFacultyId: notiType == 'F' ? false : true,
@@ -50,9 +49,9 @@ const NotificationTab = () => {
             <div className='flex flex-column gap-5'>
                 <Loader show={isLoading} />
 
-                {data?.map((notification) => (
+                {response?.data?.map((notification) => (
                     <div key={notification.id} className='flex gap-3 cursor-pointer'>
-                        <Image
+                        <CustomImage
                             src={notification.image?.path}
                             alt='hi'
                             width='100'

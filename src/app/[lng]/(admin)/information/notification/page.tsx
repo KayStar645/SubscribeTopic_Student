@@ -16,19 +16,22 @@ import { createContext, useState } from 'react';
 import InviteTab from './tab/Invite';
 import NotificationTab from './tab/Notification';
 import moment from 'moment';
+import CustomImage from '@resources/components/UI/Image';
 
 interface NotificationPageContextType {
     lng: string;
+    tab: 'IV' | 'NT';
 }
 
 const NotificationPageContext = createContext<NotificationPageContextType>({
     lng: '',
+    tab: 'NT',
 });
 
 const NotificationPage = ({ params: { lng } }: PageProps) => {
     const [tab, setTab] = useState<'NT' | 'IV'>('NT');
     const { t } = useTranslation(lng);
-    const { isLoading, data } = useGetList<NotificationType, NotificationParamType>({
+    const { isLoading, response } = useGetList<NotificationType, NotificationParamType>({
         module: 'notification',
         params: {
             filters: `lastModifiedDate>=${moment().subtract({ day: 7 }).format('yyyy-MM-DD')}`,
@@ -37,6 +40,7 @@ const NotificationPage = ({ params: { lng } }: PageProps) => {
 
     const value = {
         lng,
+        tab,
     };
 
     return (
@@ -77,9 +81,9 @@ const NotificationPage = ({ params: { lng } }: PageProps) => {
                         <Loader show={isLoading} />
 
                         <div className='flex flex-column gap-5'>
-                            {data?.data?.map((notification) => (
+                            {response?.data?.map((notification) => (
                                 <div key={notification.id} className='flex gap-3 cursor-pointer'>
-                                    <Image
+                                    <CustomImage
                                         src={notification.image?.path}
                                         alt='hi'
                                         width='100'

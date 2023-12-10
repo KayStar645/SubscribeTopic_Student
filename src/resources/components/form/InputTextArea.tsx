@@ -14,12 +14,12 @@ const InputTextArea = ({
 }: TextAreaProps) => {
     return (
         <div className={classNames(blockClassName)}>
-            <div className={classNames({ 'flex align-items-center': row })}>
+            <div className={classNames({ 'flex align-items-start': row })}>
                 {label && (
                     <label
                         htmlFor={id}
                         className={classNames('text-900 font-medium block text-800', {
-                            'w-10rem mr-2': row,
+                            'w-10rem mt-2': row,
                             'mb-2': !row,
                         })}
                     >
@@ -27,18 +27,19 @@ const InputTextArea = ({
                     </label>
                 )}
 
-                <PrimeInputTextarea
-                    value={value.toString()}
-                    placeholder={placeholder}
-                    rows={5}
-                    className={classNames('w-full line-height-3', { 'p-invalid': !!errorMessage })}
-                    onChange={(e) => {
-                        onChange?.(e);
-                    }}
-                />
+                <div className='flex-1'>
+                    <PrimeInputTextarea
+                        value={value.toString()}
+                        placeholder={placeholder}
+                        rows={5}
+                        className={classNames('w-full line-height-3', { 'p-invalid': !!errorMessage })}
+                        onChange={(e) => {
+                            onChange?.(e);
+                        }}
+                    />
+                    <small className='p-error'>{errorMessage}</small>
+                </div>
             </div>
-
-            <small className='p-error'>{errorMessage}</small>
         </div>
     );
 };

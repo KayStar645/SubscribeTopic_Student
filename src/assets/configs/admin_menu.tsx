@@ -57,6 +57,14 @@ const ADMIN_MENU = (t: TFunction, lng: string): MenuItemType[] => {
                     permission: PERMISSION.group.view,
                     checkPermission: true,
                 },
+                {
+                    code: 'invite',
+                    parent: 'thesis',
+                    label: t('menu:invite'),
+                    to: `/${lng}/${ROUTES.thesis.invite}`,
+                    permission: PERMISSION.invite.view,
+                    checkPermission: true,
+                },
             ],
         },
     ];
