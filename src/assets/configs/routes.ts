@@ -14,6 +14,7 @@ const ROUTES = {
         student_join: '/thesis/student_join',
         register_topic: '/thesis/register_topic',
         invite: 'thesis/invite',
+        job_detail: '/thesis/group/job',
     },
 
     external: {

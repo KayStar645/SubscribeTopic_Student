@@ -1,5 +1,5 @@
 import { ParamType } from '@assets/types/request';
-import { GeneralType, StudentType } from '.';
+import { GeneralType, StudentType, TopicType } from '.';
 
 interface GroupType extends GeneralType {
     countMember?: string | number;
@@ -8,6 +8,7 @@ interface GroupType extends GeneralType {
     members?: {
         student?: StudentType;
     }[];
+    thesisDto?: TopicType;
 }
 
 interface GroupParamType extends ParamType {

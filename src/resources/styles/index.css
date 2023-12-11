@@ -17,6 +17,12 @@ p {
     margin: 0;
 }
 
+a {
+    text-decoration: none;
+    color: initial;
+    display: block;
+}
+
 .p-divider-solid.p-divider-horizontal:before {
     border-top-style: solid;
 }

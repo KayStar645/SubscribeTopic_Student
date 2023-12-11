@@ -5,23 +5,11 @@ import '../../resources/styles/index.css';
 
 import ReduxProvider from '@assets/providers/ReduxProvider';
 import { PageProps } from '@assets/types/UI';
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { dir } from 'i18next';
+import moment from 'moment';
 import { APIOptions, PrimeReactProvider, addLocale, locale } from 'primereact/api';
 import { toast } from 'react-toastify';
-
-const queryClient = new QueryClient({
-    queryCache: new QueryCache({
-        onError: (error: any) => {
-            toast.error(error?.response?.data?.messages?.[0] || error?.message);
-        },
-    }),
-    mutationCache: new MutationCache({
-        onError: (error: any) => {
-            toast.error(error?.response?.data?.messages?.[0] || error?.message);
-        },
-    }),
-});
 
 locale('vi');
 
@@ -62,9 +50,41 @@ addLocale('vi', {
     clear: 'Hủy',
 });
 
+moment.locale('vi', {
+    monthsShort: [
+        'Thg 1',
+        'Thg 2',
+        'Thg 3',
+        'Thg 4',
+        'Thg 5',
+        'Thg 6',
+        'Thg 7',
+        'Thg 8',
+        'Thg 9',
+        'Thg 10',
+        'Thg 11',
+        'Thg 12',
+    ],
+});
+
 const primeReactValue: Partial<APIOptions> = {
     ripple: true,
 };
+
+const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.messages?.[0] || error?.message);
+        },
+    }),
+    defaultOptions: {
+        mutations: {
+            onError: (error: any) => {
+                toast.error(error?.response?.data?.messages?.[0] || error?.message);
+            },
+        },
+    },
+});
 
 const RootLayout = ({ children, params: { lng } }: PageProps) => {
     return (

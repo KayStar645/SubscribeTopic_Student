@@ -1,14 +1,17 @@
 'use client';
 
-import { DEFAULT_PARAMS, ROWS_PER_PAGE } from '@assets/configs';
+import { API, DEFAULT_PARAMS, ROWS_PER_PAGE } from '@assets/configs';
 import { DATE_FILTER } from '@assets/configs/general';
 import { request } from '@assets/helpers';
 import { useGetList } from '@assets/hooks/useGet';
 import { TeacherType, TopicParamType, TopicType } from '@assets/interface';
 import { PageProps } from '@assets/types/UI';
+import { ResponseType } from '@assets/types/request';
 import { Loader } from '@resources/components/UI';
 import { Dropdown } from '@resources/components/form';
 import { useTranslation } from '@resources/i18n';
+import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -18,10 +21,24 @@ import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
-    const topicQuery = useGetList<TopicType>({ module: 'register_topic' });
     const teacherQuery = useGetList<TeacherType>({ module: 'teacher' });
     const [params, setParams] = useState<TopicParamType>(DEFAULT_PARAMS);
     const { t } = useTranslation(lng);
+
+    const topicQuery = useGetList<TopicType>({
+        module: 'register_topic',
+        params: {
+            ...params,
+            removeFacultyId: true,
+            isAllDetail: true,
+        },
+    });
+
+    const topicMutation = useMutation<any, AxiosError, { thesisId: number }>({
+        mutationFn: (data) => {
+            return request.post(API.post.register_topic, data);
+        },
+    });
 
     const debounceKeyword = useDebouncedCallback((keyword) => {
         setParams((prev) => ({
@@ -32,8 +49,18 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
 
     const renderActions = (data: TopicType) => {
         return (
-            <div className='flex align-items-center gap-3'>
-                <Button label='Đăng ký' />
+            <div className='flex justify-content-center'>
+                <Button
+                    severity='success'
+                    label='Đăng ký'
+                    className='white-space-nowrap'
+                    size='small'
+                    onClick={() =>
+                        topicMutation.mutate({
+                            thesisId: data.id!,
+                        })
+                    }
+                />
             </div>
         );
     };
@@ -72,7 +99,7 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
             </div>
 
             <div className='border-round-xl overflow-hidden relative shadow-5'>
-                <Loader show={topicQuery.isFetching || teacherQuery.isFetching} />
+                <Loader show={topicQuery.isFetching || teacherQuery.isFetching || topicMutation.isPending} />
 
                 <DataTable
                     value={topicQuery.response?.data || []}
@@ -118,48 +145,13 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                             color: 'var(--surface-a)',
                             whiteSpace: 'nowrap',
                         }}
-                        field='lecturerThesis.name'
-                        header={t('module:field.thesis.lecturer')}
-                    />
-                    <Column
-                        alignHeader='center'
-                        headerStyle={{
-                            background: 'var(--primary-color)',
-                            color: 'var(--surface-a)',
-                            whiteSpace: 'nowrap',
-                        }}
-                        header={t('module:field.thesis.instruction')}
-                        body={(data: TopicType) => <p>{data.thesisInstructions?.map((t) => t.name).join(', ')}</p>}
-                    />
-                    <Column
-                        alignHeader='center'
-                        headerStyle={{
-                            background: 'var(--primary-color)',
-                            color: 'var(--surface-a)',
-                            whiteSpace: 'nowrap',
-                        }}
-                        header={t('module:field.thesis.review')}
-                        body={(data: TopicType) => <p>{data.thesisReviews?.map((t) => t.name).join(', ')}</p>}
+                        header='Chuyên ngành phù hợp'
+                        body={(data: TopicType) => <div>{data.thesisMajors?.map((t) => t.name).join(', ')}</div>}
                     />
                 </DataTable>
 
                 <div className='flex align-items-center justify-content-between bg-white px-3 py-2'>
-                    <Dropdown
-                        id='date_created_filter'
-                        value='date_decrease'
-                        optionValue='code'
-                        onChange={(sortCode) => {
-                            const filter = DATE_FILTER(t).find((t) => t.code === sortCode);
-
-                            setParams((prev) => {
-                                return {
-                                    ...prev,
-                                    sorts: request.handleSort(filter, prev),
-                                };
-                            });
-                        }}
-                        options={DATE_FILTER(t)}
-                    />
+                    <div></div>
 
                     <Paginator
                         first={request.currentPage(topicQuery.response?.extra?.currentPage)}

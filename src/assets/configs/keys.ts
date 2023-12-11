@@ -14,21 +14,16 @@ const list = (params: any) => ({
     register_topic: ['register_topics', 'list', params],
     invitation: ['invitations', 'list', params],
     student_by_period: ['student_by_periods', 'list', params],
+    job: ['jobs', 'list', params],
+    exchange: ['exchanges', 'list', params],
 });
 
 const detail = () => ({
     notification: ['notification_detail', 'detail'],
-    faculty: ['faculty_detail', 'detail'],
-    industry: ['industry_detail', 'detail'],
-    major: ['major_detail', 'detail'],
-    department: ['department_detail', 'detail'],
-    teacher: ['teacher_detail', 'detail'],
-    student: ['student_detail', 'detail'],
-    registration_period: ['registration_period_detail', 'detail'],
     group: ['group_detail', 'detail'],
     thesis: ['thesis_detail', 'detail'],
-    role: ['role_detail', 'detail'],
-    student_join: ['student_join_detail', 'detail'],
+    topic: ['topic', 'detail'],
+    job: ['job', 'detail'],
 });
 
 export { list, detail };

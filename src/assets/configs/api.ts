@@ -29,12 +29,23 @@ const API = {
         register_topic: '/thesis/listThesisRegistration',
 
         invitation: '/invitation',
+
+        job: '/job',
+
+        exchange: '/exchange',
     },
 
     detail: {
         notification: '/notification/detail',
         group: '/group/detail',
         thesis: '/thesis/detail',
+        topic: '/thesis/detail',
+        job: '/job/detail',
+    },
+
+    post: {
+        register_topic: '/thesisRegistration',
+        google_drive: '/googleDrive',
     },
 };
 

@@ -6,21 +6,21 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useCallback, useEffect } from 'react';
 
-interface UseGetType<TParam> {
+interface UseGetType<TParam, TData> {
     params?: TParam;
     enabled?: boolean;
-    _onSuccess?: (_data: any) => void;
+    _onSuccess?: (_data: ResponseType<TData>) => void;
 }
 
-interface UseGetListType<TParam> extends UseGetType<TParam> {
+interface UseGetListType<TParam, TData> extends UseGetType<TParam, TData> {
     module: keyof typeof API.list;
 }
 
-interface UseGetDetailType<TParam> extends UseGetType<TParam> {
+interface UseGetDetailType<TParam, TData> extends UseGetType<TParam, TData> {
     module: keyof typeof API.detail;
 }
 
-interface useGetListMultiType<TParam, TData> extends UseGetType<TParam> {
+interface useGetListMultiType<TParam, TData> extends UseGetType<TParam, TData> {
     module: keyof typeof API.list;
     data: TData[];
 }
@@ -30,7 +30,7 @@ const useGetList = <TQueryFnData, TParam = ParamType>({
     params,
     enabled = true,
     _onSuccess = () => {},
-}: UseGetListType<TParam>) => {
+}: UseGetListType<TParam, TQueryFnData[]>) => {
     const query = useQuery<ResponseType<TQueryFnData[]>, AxiosError<ResponseType>>({
         enabled,
         refetchOnWindowFocus: false,
@@ -42,14 +42,16 @@ const useGetList = <TQueryFnData, TParam = ParamType>({
         },
     });
     const onSuccess = useCallback(() => {
-        _onSuccess(query.data);
+        if (query.data) {
+            _onSuccess(query.data);
+        }
     }, [_onSuccess, query.data]);
 
     useEffect(() => {
         onSuccess();
     }, [onSuccess, query.data]);
 
-    return { ...query, onSuccess, response: query.data };
+    return { ...query, response: query.data };
 };
 
 const useGetDetail = <TQueryFnData, TParam = ParamType>({
@@ -57,20 +59,22 @@ const useGetDetail = <TQueryFnData, TParam = ParamType>({
     params,
     enabled = true,
     _onSuccess = () => {},
-}: UseGetDetailType<TParam>) => {
-    const query = useQuery<TQueryFnData | null, AxiosError<ResponseType>>({
+}: UseGetDetailType<TParam, TQueryFnData>) => {
+    const query = useQuery<ResponseType<TQueryFnData>, AxiosError<ResponseType>>({
         enabled,
         refetchOnWindowFocus: false,
         queryKey: [...detail()[module], params],
         queryFn: async () => {
             const response = await request.get<TQueryFnData>(API.detail[module], { params });
 
-            return response.data.data;
+            return response.data;
         },
     });
 
     const onSuccess = useCallback(() => {
-        _onSuccess(query.data);
+        if (query.data) {
+            _onSuccess(query.data);
+        }
     }, [_onSuccess, query.data]);
 
     useEffect(() => {
@@ -106,15 +110,17 @@ const useGetListMulti = <TData, TQueryFnData, TParam = ParamType>({
         },
     });
 
-    const onSuccess = useCallback(() => {
-        _onSuccess(query.data);
-    }, [_onSuccess, query.data]);
+    // const onSuccess = useCallback(() => {
+    //     if (query.data) {
+    //         _onSuccess(query.data);
+    //     }
+    // }, [_onSuccess, query.data]);
 
-    useEffect(() => {
-        onSuccess();
-    }, [onSuccess, query.data]);
+    // useEffect(() => {
+    //     onSuccess();
+    // }, [onSuccess, query.data]);
 
-    return { ...query, onSuccess };
+    return { ...query };
 };
 
 export { useGetDetail, useGetList, useGetListMulti };

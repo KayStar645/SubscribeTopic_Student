@@ -95,6 +95,9 @@ interface InputFileProps extends InputProps {
     folder: string;
     accept?: string;
     defaultFileText?: string;
+    hasDefault?: boolean;
+    fileClassName?: string;
+    showRemove?: boolean;
     onChange?: (_e: InputFileOnChange) => void;
 }
 

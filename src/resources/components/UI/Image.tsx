@@ -1,3 +1,5 @@
+'use client';
+
 import { CustomImageProps } from '@assets/types/UI';
 import { Image } from 'primereact/image';
 import { useState } from 'react';

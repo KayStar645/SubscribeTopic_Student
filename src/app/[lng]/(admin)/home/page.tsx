@@ -32,8 +32,8 @@ const HomePage = ({ params: { lng } }: PageProps) => {
                     </div>
                 </div>
 
-                <div className='flex mt-5 flex-wrap'>
-                    <div className='col-4 flex-1 flex flex-column gap-3'>
+                <div className='flex mt-5 flex-wrap gap-3'>
+                    <div className='flex-1 flex flex-column gap-3'>
                         <Card title='Sắp đến hạn' subTitle='Danh sách bài tập đến hạn'>
                             <div className='flex gap-3 mb-4'>
                                 <Skeleton width='3rem' height='3rem' />
@@ -73,13 +73,13 @@ const HomePage = ({ params: { lng } }: PageProps) => {
                         </Card>
                     </div>
 
-                    <div className='col-8 h-full'>
+                    <div className='h-full'>
                         <Card title='Điểm phản biện' className='h-full'>
                             <Chart />
                         </Card>
                     </div>
 
-                    <div className='col-12'>
+                    <div className='w-full'>
                         <Card title='Phản biện' subTitle='Lịch phản biện diễn ra trong 1 tuần'></Card>
                     </div>
                 </div>
