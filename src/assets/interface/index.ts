@@ -17,3 +17,4 @@ export * from './Feedback';
 export * from './Invite';
 export * from './Job';
 export * from './Exchange';
+export * from './JobResult';

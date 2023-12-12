@@ -33,6 +33,8 @@ const API = {
         job: '/job',
 
         exchange: '/exchange',
+
+        job_result: '/jobResults',
     },
 
     detail: {

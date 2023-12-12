@@ -16,6 +16,7 @@ const list = (params: any) => ({
     student_by_period: ['student_by_periods', 'list', params],
     job: ['jobs', 'list', params],
     exchange: ['exchanges', 'list', params],
+    job_result: ['job_results', 'list', params],
 });
 
 const detail = () => ({

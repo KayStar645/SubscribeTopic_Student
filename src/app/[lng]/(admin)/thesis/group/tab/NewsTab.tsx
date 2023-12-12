@@ -9,7 +9,7 @@ import { useContext } from 'react';
 import { GroupPageContext } from '../[id]/page';
 
 const NewsTab = () => {
-    const { t, lng, topic, jobs } = useContext(GroupPageContext);
+    const { t, lng, topic, jobs, id } = useContext(GroupPageContext);
 
     return (
         <div>
@@ -69,7 +69,7 @@ const NewsTab = () => {
                                         key={job.id}
                                         href={`${language.addPrefixLanguage(lng, ROUTES.thesis.job_detail)}/${
                                             job.id
-                                        }?topicId=${topic?.id}`}
+                                        }?topicId=${topic?.id}&groupId=${id}`}
                                         className='shadow-2 border-round px-4 py-3 bg-white flex align-items-center gap-3 cursor-pointer flex-1 no-underline hover:bg-blue-50'
                                     >
                                         <Button icon='pi pi-book' rounded={true} />

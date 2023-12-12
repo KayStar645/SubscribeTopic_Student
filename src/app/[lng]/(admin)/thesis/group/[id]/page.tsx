@@ -14,6 +14,7 @@ import MemberTab from '../tab/MemberTab';
 import NewsTab from '../tab/NewsTab';
 
 type GroupPageContextType = {
+    id: number;
     t: TFunction;
     lng: string;
     topic?: TopicType | null;
@@ -21,13 +22,14 @@ type GroupPageContextType = {
 };
 
 const GroupPageContext = createContext<GroupPageContextType>({
+    id: 0,
     t: defaultT,
     lng: 'vi',
     topic: null,
     jobs: [],
 });
 
-const JobPage = ({ params }: PageProps) => {
+const GroupPage = ({ params }: PageProps) => {
     const { lng, id } = params;
     const { t } = useTranslation(lng);
     const [activeTab, setActiveTab] = useState<string>('news');
@@ -78,6 +80,7 @@ const JobPage = ({ params }: PageProps) => {
     );
 
     const value: GroupPageContextType = {
+        id,
         t,
         lng,
         topic: topicDetail.response?.data,
@@ -121,5 +124,5 @@ const JobPage = ({ params }: PageProps) => {
     );
 };
 
-export default JobPage;
+export default GroupPage;
 export { GroupPageContext };

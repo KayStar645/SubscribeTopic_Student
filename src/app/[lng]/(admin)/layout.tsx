@@ -7,7 +7,7 @@ import { ToastContainer } from 'react-toastify';
 
 const AdminLayout = ({ children, params: { lng } }: PageProps) => {
     return (
-        <body className='min-h-screen overflow-hidden m-0 pl-2' style={{ background: '#f6f6f3' }}>
+        <body className='min-h-screen surface-100 overflow-hidden m-0 pl-2'>
             <div className='flex'>
                 <Sidebar lng={lng} />
 

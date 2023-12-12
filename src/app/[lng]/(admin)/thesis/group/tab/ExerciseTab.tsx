@@ -12,7 +12,7 @@ import { ROUTES } from '@assets/configs';
 import { GroupPageContext } from '../[id]/page';
 
 const ExerciseTab = () => {
-    const { jobs, topic, lng } = useContext(GroupPageContext);
+    const { jobs, topic, lng, id } = useContext(GroupPageContext);
 
     const ExerciseItemHeader = (options: PanelHeaderTemplateOptions, job: JobType) => {
         return (
@@ -66,7 +66,7 @@ const ExerciseTab = () => {
                             <Link
                                 href={`${language.addPrefixLanguage(lng, ROUTES.thesis.job_detail)}/${job.id}?topicId=${
                                     topic?.id
-                                }`}
+                                }&groupId=${id}`}
                                 className='p-ripple hover:bg-blue-50 hover:underline border-round'
                             >
                                 <p className='text-blue-600 font-semibold'>Xem hướng dẫn</p>

@@ -49,7 +49,7 @@ const InviteForm = forwardRef<InviteFormRefType, InviteFormType>(({ title, lng, 
 
     const inviteMutation = useMutation<any, AxiosError<ResponseType>, { message: string; studentJoinId: number }>({
         mutationFn: (data) => {
-            return request.post(API.list.invite, data, {
+            return request.post(API.list.invitation, data, {
                 params: {
                     removeFacultyId: true,
                 },
