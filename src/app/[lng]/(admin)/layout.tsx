@@ -16,7 +16,7 @@ const AdminLayout = ({ children, params: { lng } }: PageProps) => {
                 </div>
 
                 <div className='flex-1'>
-                    <div className='py-3 overflow-auto h-screen pr-2'>{children}</div>
+                    <div className='py-3 overflow-auto h-screen pl-1 pr-2'>{children}</div>
                 </div>
             </div>
 

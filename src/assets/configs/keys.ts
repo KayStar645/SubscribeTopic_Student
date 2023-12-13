@@ -17,12 +17,12 @@ const list = (params: any) => ({
     job: ['jobs', 'list', params],
     exchange: ['exchanges', 'list', params],
     job_result: ['job_results', 'list', params],
+    feedback: ['feedbacks', 'list', params],
 });
 
 const detail = () => ({
     notification: ['notification_detail', 'detail'],
     group: ['group_detail', 'detail'],
-    thesis: ['thesis_detail', 'detail'],
     topic: ['topic', 'detail'],
     job: ['job', 'detail'],
 });

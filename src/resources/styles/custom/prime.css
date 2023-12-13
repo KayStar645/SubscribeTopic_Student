@@ -44,3 +44,9 @@
     border: none;
     border-radius: 0;
 }
+
+.p-panel .p-panel-header {
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}

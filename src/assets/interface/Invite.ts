@@ -1,10 +1,16 @@
-import { GroupType } from '.';
+import { ParamType } from '@assets/types/request';
+import { GeneralType, GroupType } from '.';
 
-interface InviteType {
+interface InviteType extends GeneralType {
     message: string;
     studentJoinId: number;
     timeSent?: Date;
-    groupId?: GroupType;
+    groupId?: number;
+    group?: GroupType;
 }
 
-export type { InviteType };
+interface InviteParamType extends ParamType {
+    isGetGroup?: boolean;
+}
+
+export type { InviteType, InviteParamType };

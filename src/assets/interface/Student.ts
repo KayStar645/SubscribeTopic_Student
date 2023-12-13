@@ -9,6 +9,7 @@ interface StudentType extends GeneralType {
     email?: string;
     majorId?: string | number;
     studentJoinId?: number;
+    status?: string;
 }
 
 interface StudentParamType extends ParamType {

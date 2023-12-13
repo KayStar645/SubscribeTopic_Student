@@ -1,8 +1,8 @@
 'use client';
 
-import { API, DEFAULT_PARAMS, ROWS_PER_PAGE } from '@assets/configs';
+import { API, DEFAULT_PARAMS, ROUTES, ROWS_PER_PAGE } from '@assets/configs';
 import { DATE_FILTER } from '@assets/configs/general';
-import { request } from '@assets/helpers';
+import { language, request } from '@assets/helpers';
 import { useGetList } from '@assets/hooks/useGet';
 import { TeacherType, TopicParamType, TopicType } from '@assets/interface';
 import { PageProps } from '@assets/types/UI';
@@ -12,11 +12,13 @@ import { Dropdown } from '@resources/components/form';
 import { useTranslation } from '@resources/i18n';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import Link from 'next/link';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
 import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
+import { Tooltip } from 'primereact/tooltip';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -34,12 +36,6 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
         },
     });
 
-    const topicMutation = useMutation<any, AxiosError, { thesisId: number }>({
-        mutationFn: (data) => {
-            return request.post(API.post.register_topic, data);
-        },
-    });
-
     const debounceKeyword = useDebouncedCallback((keyword) => {
         setParams((prev) => ({
             ...prev,
@@ -49,18 +45,10 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
 
     const renderActions = (data: TopicType) => {
         return (
-            <div className='flex justify-content-center'>
-                <Button
-                    severity='success'
-                    label='Đăng ký'
-                    className='white-space-nowrap'
-                    size='small'
-                    onClick={() =>
-                        topicMutation.mutate({
-                            thesisId: data.id!,
-                        })
-                    }
-                />
+            <div className='flex justify-content-center gap-3'>
+                <Link href={language.addPrefixLanguage(lng, `${ROUTES.thesis.register_topic}/${data.id}`)}>
+                    <i className='pi pi-eye cursor-pointer hover:text-primary' />
+                </Link>
             </div>
         );
     };
@@ -99,7 +87,7 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
             </div>
 
             <div className='border-round-xl overflow-hidden relative shadow-5'>
-                <Loader show={topicQuery.isFetching || teacherQuery.isFetching || topicMutation.isPending} />
+                <Loader show={topicQuery.isFetching || teacherQuery.isFetching} />
 
                 <DataTable
                     value={topicQuery.response?.data || []}

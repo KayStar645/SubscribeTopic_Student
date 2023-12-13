@@ -35,12 +35,13 @@ const API = {
         exchange: '/exchange',
 
         job_result: '/jobResults',
+
+        feedback: '/feedback',
     },
 
     detail: {
         notification: '/notification/detail',
         group: '/group/detail',
-        thesis: '/thesis/detail',
         topic: '/thesis/detail',
         job: '/job/detail',
     },
@@ -48,6 +49,7 @@ const API = {
     post: {
         register_topic: '/thesisRegistration',
         google_drive: '/googleDrive',
+        change_invite_status: '/invitation/changeStatus',
     },
 };
 

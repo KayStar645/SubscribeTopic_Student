@@ -87,7 +87,7 @@ const USER_TYPE = (t: TFunction): OptionType[] => [
     },
 ];
 
-const THESIS_STATUS = (t: TFunction) => ({
+const THESIS_STATUS = (t: TFunction): any => ({
     A: t('common:approve'),
     AR: t('common:approve_request'),
     D: t('common:draft'),

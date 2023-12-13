@@ -1,14 +1,13 @@
 'use client';
 
-import { API, ROWS_PER_PAGE } from '@assets/configs';
+import { API, DEFAULT_PARAMS, ROUTES, ROWS_PER_PAGE } from '@assets/configs';
 import { request } from '@assets/helpers';
 import { StudentParamType, StudentType } from '@assets/interface';
 import { PageProps } from '@assets/types/UI';
-import { ConfirmModalRefType } from '@assets/types/modal';
 import { MetaType, ResponseType } from '@assets/types/request';
 import Loader from '@resources/components/UI/Loader';
 import { useTranslation } from '@resources/i18n';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -17,36 +16,31 @@ import { InputText } from 'primereact/inputtext';
 import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 import { useRef, useState } from 'react';
 import InviteForm, { InviteFormRefType } from './form';
+import { Tooltip } from 'primereact/tooltip';
+import { ConfirmModalRefType, ConfirmModalType } from '@assets/types/modal';
+import { ConfirmModal } from '@resources/components/modal';
+import { useGetList } from '@assets/hooks/useGet';
+import { toast } from 'react-toastify';
 
 const InvitePage = ({ params: { lng } }: PageProps) => {
     const { t } = useTranslation(lng);
     const formRef = useRef<InviteFormRefType>(null);
-    const confirmModalRef = useRef<ConfirmModalRefType>(null);
-    const [meta, setMeta] = useState<MetaType>(request.defaultMeta);
     const [selected, setSelected] = useState<StudentType>();
-    const [params, setParams] = useState<StudentParamType>({
-        page: meta.currentPage,
-        pageSize: meta.pageSize,
-        sorts: '-DateCreated',
+    const confirmModalRef = useRef<ConfirmModalRefType>(null);
+
+    const [params, setParams] = useState<StudentParamType>(DEFAULT_PARAMS);
+
+    const studentQuery = useGetList<StudentType[]>({
+        module: 'student_by_period',
+        params,
     });
 
-    const studentQuery = useQuery<StudentType[], AxiosError<ResponseType>>({
-        refetchOnWindowFocus: false,
-        queryKey: ['students', 'list', params],
-        queryFn: async () => {
-            const response = await request.get<StudentType[]>(`${API.list.student_by_period}`, { params });
-
-            setMeta({
-                currentPage: response.data.extra?.currentPage,
-                hasNextPage: response.data.extra?.hasNextPage,
-                hasPreviousPage: response.data.extra?.hasPreviousPage,
-                pageSize: response.data.extra?.pageSize,
-                totalCount: response.data.extra?.totalCount,
-                totalPages: response.data.extra?.totalPages,
-                messages: response.data.extra?.messages,
+    const recallInviteMutate = useMutation({
+        mutationFn: (id: number) => {
+            return request.update(API.post.change_invite_status, {
+                id,
+                status: 'C',
             });
-
-            return response.data.data || [];
         },
     });
 
@@ -57,29 +51,47 @@ const InvitePage = ({ params: { lng } }: PageProps) => {
     const renderActions = (data: StudentType) => {
         return (
             <div className='flex align-items-center justify-content-center gap-3'>
-                <i
-                    className='pi pi-envelope hover:text-primary cursor-pointer'
-                    onClick={() => {
-                        formRef.current?.show?.(data);
-                        setSelected(data);
-                    }}
-                />
+                {data.status == 'S' && (
+                    <i
+                        data-pr-tooltip='Thu hồi lời mời'
+                        className='pi pi-replay send-invite hover:text-red-500 cursor-pointer'
+                        onClick={(e) => {
+                            confirmModalRef.current?.show?.(e, data, `Bạn có muốn hủy lời mời tới ${data.name}`);
+
+                            setSelected(data);
+                        }}
+                    />
+                )}
+
+                {data.status == 'N' && (
+                    <i
+                        data-pr-tooltip='Gửi lời mời'
+                        className='pi pi-envelope send-invite hover:text-primary cursor-pointer'
+                        onClick={() => {
+                            formRef.current?.show?.(data);
+                            setSelected(data);
+                        }}
+                    />
+                )}
+
+                <Tooltip target='.send-invite' />
+                <Tooltip target='.send-invite' />
             </div>
         );
     };
+
+    const onRemove = (data: StudentType) => {
+        recallInviteMutate.mutate(data.id!, {
+            onSuccess: () => {
+                toast.success('Thu hồi lời mời thành công');
+            },
+        });
+    };
+
     return (
         <div className='flex flex-column gap-4'>
             <div className='flex align-items-center justify-content-between bg-white h-4rem px-3 border-round-lg shadow-3'>
                 <p className='text-xl font-semibold'>{t('list_of', { module: t('module:student').toLowerCase() })}</p>
-                <Button
-                    label={t('create_new')}
-                    icon='pi pi-plus'
-                    size='small'
-                    onClick={() => {
-                        formRef.current?.show?.();
-                        setSelected(undefined);
-                    }}
-                />
             </div>
 
             <div className='flex align-items-center justify-content-between'>
@@ -87,10 +99,10 @@ const InvitePage = ({ params: { lng } }: PageProps) => {
             </div>
 
             <div className='border-round-xl overflow-hidden relative shadow-5'>
-                <Loader show={studentQuery.isFetching} />
+                <Loader show={studentQuery.isFetching || recallInviteMutate.isPending} />
 
                 <DataTable
-                    value={studentQuery.data || []}
+                    value={studentQuery.response?.data || []}
                     rowHover={true}
                     stripedRows={true}
                     showGridlines={true}
@@ -162,9 +174,9 @@ const InvitePage = ({ params: { lng } }: PageProps) => {
                     <div></div>
 
                     <Paginator
-                        first={request.currentPage(meta.currentPage)}
-                        rows={meta.pageSize}
-                        totalRecords={meta.totalCount}
+                        first={request.currentPage(studentQuery.response?.extra?.currentPage)}
+                        rows={studentQuery.response?.extra?.pageSize}
+                        totalRecords={studentQuery.response?.extra?.totalCount}
                         rowsPerPageOptions={ROWS_PER_PAGE}
                         onPageChange={onPageChange}
                         className='border-noround p-0'
@@ -177,6 +189,13 @@ const InvitePage = ({ params: { lng } }: PageProps) => {
                 title={`Gửi lời mới tới ${selected?.name}`}
                 ref={formRef}
                 onSuccess={(data) => studentQuery.refetch()}
+            />
+
+            <ConfirmModal
+                ref={confirmModalRef}
+                onAccept={onRemove}
+                acceptLabel={t('confirm')}
+                rejectLabel={t('cancel')}
             />
         </div>
     );
