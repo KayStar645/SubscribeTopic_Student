@@ -1,12 +1,11 @@
 'use client';
 
 import { API, DEFAULT_PARAMS, ROUTES, ROWS_PER_PAGE } from '@assets/configs';
-import { DATE_FILTER } from '@assets/configs/general';
 import { language, request } from '@assets/helpers';
-import { useGetList } from '@assets/hooks/useGet';
+import { HTML } from '@assets/helpers/string';
+import { useGetDetail, useGetList } from '@assets/hooks/useGet';
 import { TeacherType, TopicParamType, TopicType } from '@assets/interface';
 import { PageProps } from '@assets/types/UI';
-import { ResponseType } from '@assets/types/request';
 import { Loader } from '@resources/components/UI';
 import { Dropdown } from '@resources/components/form';
 import { useTranslation } from '@resources/i18n';
@@ -16,16 +15,36 @@ import Link from 'next/link';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { Divider } from 'primereact/divider';
 import { InputText } from 'primereact/inputtext';
 import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
-import { Tooltip } from 'primereact/tooltip';
+import { Panel } from 'primereact/panel';
+import { Skeleton } from 'primereact/skeleton';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { useDebouncedCallback } from 'use-debounce';
 
 const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
     const teacherQuery = useGetList<TeacherType>({ module: 'teacher' });
     const [params, setParams] = useState<TopicParamType>(DEFAULT_PARAMS);
     const { t } = useTranslation(lng);
+    const [selected, setSelected] = useState<TopicType>();
+
+    const { response, isFetching } = useGetDetail<TopicType>({
+        module: 'topic',
+        enabled: !!selected?.id,
+        params: {
+            id: selected?.id,
+            isAllDetail: true,
+        },
+        _onSuccess(_data) {},
+    });
+
+    const topicMutation = useMutation<any, AxiosError, { thesisId: number }>({
+        mutationFn: (data) => {
+            return request.post(API.post.register_topic, data);
+        },
+    });
 
     const topicQuery = useGetList<TopicType>({
         module: 'register_topic',
@@ -46,9 +65,7 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
     const renderActions = (data: TopicType) => {
         return (
             <div className='flex justify-content-center gap-3'>
-                <Link href={language.addPrefixLanguage(lng, `${ROUTES.thesis.register_topic}/${data.id}`)}>
-                    <i className='pi pi-eye cursor-pointer hover:text-primary' />
-                </Link>
+                <i className='pi pi-eye cursor-pointer hover:text-primary' onClick={() => setSelected(data)} />
             </div>
         );
     };
@@ -86,7 +103,7 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                 />
             </div>
 
-            <div className='border-round-xl overflow-hidden relative shadow-5'>
+            <div className='border-round-xl overflow-hidden relative shadow-2'>
                 <Loader show={topicQuery.isFetching || teacherQuery.isFetching} />
 
                 <DataTable
@@ -151,6 +168,207 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                     />
                 </div>
             </div>
+
+            {selected && (
+                <div className='bg-white border-round-xl p-3 overflow-hidden shadow-2 relative'>
+                    <Loader show={isFetching || topicMutation.isPending} />
+
+                    <div className='flex flex-column gap-3'>
+                        <p className='font-bold text-800 text-xl pb-3 text-center'>Chi tiết đề tài</p>
+
+                        <Panel
+                            toggleable={true}
+                            collapsed={true}
+                            header={t('module:field.thesis.lecturer')}
+                            className='shadow-2 border-1 border-300 border-round-xl overflow-hidden'
+                        >
+                            <div className='flex flex-column gap-3 p-3'>
+                                <div className='flex align-items-center'>
+                                    <p className='w-15rem'>
+                                        {t('common:name_of', { obj: t('module:teacher').toLowerCase() })}
+                                    </p>
+                                    <p className='text-900 font-semibold'>{response?.data?.lecturerThesis?.name}</p>
+                                </div>
+
+                                <div className='flex align-items-center'>
+                                    <p className='w-15rem'>{t('common:email')}</p>
+                                    <p className='text-900 font-semibold'>{response?.data?.lecturerThesis?.email}</p>
+                                </div>
+
+                                <div className='flex align-items-center'>
+                                    <p className='w-15rem'>{t('common:phone_number')}</p>
+                                    <p className='text-900 font-semibold'>
+                                        {response?.data?.lecturerThesis?.phoneNumber}
+                                    </p>
+                                </div>
+
+                                <div className='flex align-items-center'>
+                                    <p className='w-15rem'>{t('module:field.teacher.academic')}</p>
+                                    <p className='text-900 font-semibold'>
+                                        {response?.data?.lecturerThesis?.academicTitle}
+                                    </p>
+                                </div>
+                            </div>
+                        </Panel>
+
+                        {response?.data?.thesisInstructions && response?.data?.thesisInstructions.length > 0 && (
+                            <Panel
+                                toggleable={true}
+                                collapsed={true}
+                                header='Giảng viên hướng dẫn'
+                                className='shadow-2 border-1 border-300 border-round-xl overflow-hidden'
+                            >
+                                <div className='p-3'>
+                                    {response?.data?.thesisInstructions?.map((teacher, index) => (
+                                        <>
+                                            <div className='flex flex-column gap-3' key={teacher.id}>
+                                                <div className='flex align-items-center'>
+                                                    <p className='w-15rem'>
+                                                        {t('common:name_of', {
+                                                            obj: t('module:teacher').toLowerCase(),
+                                                        })}
+                                                    </p>
+                                                    <p className='text-900 font-semibold'>{teacher?.name}</p>
+                                                </div>
+
+                                                <div className='flex align-items-center'>
+                                                    <p className='w-15rem'>{t('common:email')}</p>
+                                                    <p className='text-900 font-semibold'>{teacher?.email}</p>
+                                                </div>
+
+                                                <div className='flex align-items-center'>
+                                                    <p className='w-15rem'>{t('common:phone_number')}</p>
+                                                    <p className='text-900 font-semibold'>{teacher?.phoneNumber}</p>
+                                                </div>
+
+                                                <div className='flex align-items-center'>
+                                                    <p className='w-15rem'>{t('module:field.teacher.academic')}</p>
+                                                    <p className='text-900 font-semibold'>{teacher?.academicTitle}</p>
+                                                </div>
+                                            </div>
+
+                                            {index < response.data?.thesisInstructions?.length! - 1 && (
+                                                <div className='px-8'>
+                                                    <Divider />
+                                                </div>
+                                            )}
+                                        </>
+                                    ))}
+                                </div>
+                            </Panel>
+                        )}
+
+                        {response?.data?.thesisReviews && response.data?.thesisReviews?.length > 0 && (
+                            <Panel
+                                toggleable={true}
+                                collapsed={true}
+                                header='Giảng viên phản biện'
+                                className='shadow-2 border-1 border-300 border-round-xl overflow-hidden'
+                            >
+                                <div className='p-3'>
+                                    {response?.data?.thesisReviews?.map((teacher, index) => (
+                                        <>
+                                            <div className='flex flex-column gap-3' key={teacher.id}>
+                                                <div className='flex align-items-center'>
+                                                    <p className='w-15rem'>
+                                                        {t('common:name_of', {
+                                                            obj: t('module:teacher').toLowerCase(),
+                                                        })}
+                                                    </p>
+                                                    <p className='text-900 font-semibold'>{teacher?.name}</p>
+                                                </div>
+
+                                                <div className='flex align-items-center'>
+                                                    <p className='w-15rem'>{t('common:email')}</p>
+                                                    <p className='text-900 font-semibold'>{teacher?.email}</p>
+                                                </div>
+
+                                                <div className='flex align-items-center'>
+                                                    <p className='w-15rem'>{t('common:phone_number')}</p>
+                                                    <p className='text-900 font-semibold'>{teacher?.phoneNumber}</p>
+                                                </div>
+
+                                                <div className='flex align-items-center'>
+                                                    <p className='w-15rem'>{t('module:field.teacher.academic')}</p>
+                                                    <p className='text-900 font-semibold'>{teacher?.academicTitle}</p>
+                                                </div>
+                                            </div>
+
+                                            {index < response.data?.thesisReviews?.length! - 1 && (
+                                                <div className='px-8'>
+                                                    <Divider />
+                                                </div>
+                                            )}
+                                        </>
+                                    ))}
+                                </div>
+                            </Panel>
+                        )}
+
+                        <div className='p-3 bg-white border-round-xl shadow-2'>
+                            <div className='flex align-items-center justify-content-between gap-3'>
+                                {isFetching ? (
+                                    <Skeleton className='flex-1 h-2rem' />
+                                ) : (
+                                    <p className='flex-1 font-bold text-xl text-800'>{response?.data?.name}</p>
+                                )}
+
+                                <Button
+                                    label='Đăng ký'
+                                    size='small'
+                                    onClick={() => {
+                                        topicMutation.mutate(
+                                            {
+                                                thesisId: selected?.id!,
+                                            },
+                                            {
+                                                onSuccess: () => {
+                                                    toast.success('Đăng ký đề tài thành công');
+                                                },
+                                            },
+                                        );
+                                    }}
+                                />
+                            </div>
+
+                            <Divider align='center'>
+                                <div className='flex align-items-center gap-2'>
+                                    <i className='pi pi-comments' />
+                                    <p className='font-semibold'>Lời mời đầu</p>
+                                </div>
+                            </Divider>
+
+                            {isFetching ? (
+                                <Skeleton className='h-10rem' />
+                            ) : (
+                                <p dangerouslySetInnerHTML={HTML(response?.data?.summary)} />
+                            )}
+
+                            <Divider align='center'>
+                                <div className='flex align-items-center gap-2'>
+                                    <i className='pi pi-question-circle' />
+                                    <p className='font-semibold'>Về đề tài</p>
+                                </div>
+                            </Divider>
+
+                            {isFetching ? (
+                                <Skeleton className='h-3rem' />
+                            ) : (
+                                <p>
+                                    Đề tài phù hợp với sinh viên thuộc chuyên nghành{' '}
+                                    {response?.data?.thesisMajors?.map((t) => t.name).join(', ')}, yêu cầu tối thiểu{' '}
+                                    {response?.data?.minQuantity} thành viên và tối đa {response?.data?.maxQuantity}{' '}
+                                    thành viên tham gia thực hiện, được hướng dẫn bởi{' '}
+                                    {response?.data?.thesisInstructions
+                                        ?.map((t) => t.academicTitle + ' ' + t.name)
+                                        .join(', ')}{' '}
+                                    với nhiều năm kinh nghiệm giảng dạy và nghiên cứu.
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

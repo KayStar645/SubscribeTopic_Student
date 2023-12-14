@@ -13,8 +13,9 @@ const ROUTES = {
         group: '/thesis/group',
         student_join: '/thesis/student_join',
         register_topic: '/thesis/register_topic',
-        invite: 'thesis/invite',
+        invite: '/thesis/invite',
         job_detail: '/thesis/group/job',
+        schedule: 'thesis/schedule',
     },
 
     external: {

@@ -1,61 +1,195 @@
+'use client';
+
+import { ROUTES } from '@assets/configs';
+import { date, language } from '@assets/helpers';
+import { HTML } from '@assets/helpers/string';
+import { useGetDetail, useGetList } from '@assets/hooks/useGet';
+import {
+    GroupParamType,
+    GroupType,
+    JobParamType,
+    JobType,
+    NotificationParamType,
+    NotificationType,
+} from '@assets/interface';
 import { PageProps } from '@assets/types/UI';
+import { CustomImage, Loader } from '@resources/components/UI';
 import FullCalendar from '@resources/components/UI/FullCalendar';
 import Chart from '@resources/components/layout/Chart';
 import { useTranslation } from '@resources/i18n';
+import { format, sub } from 'date-fns';
+import moment from 'moment';
+import Link from 'next/link';
 import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
-import { InputText } from 'primereact/inputtext';
+import { Panel, PanelHeaderTemplateOptions } from 'primereact/panel';
+import { Ripple } from 'primereact/ripple';
 import { Skeleton } from 'primereact/skeleton';
+import { classNames } from 'primereact/utils';
 
 const HomePage = ({ params: { lng } }: PageProps) => {
     const { t } = useTranslation(lng);
 
+    const groupQuery = useGetDetail<GroupType, GroupParamType>({
+        module: 'group',
+        params: {
+            isGetGroupMeCurrent: true,
+            isGetMember: true,
+            isGetThesis: true,
+        },
+    });
+
+    const jobQuery = useGetList<JobType, JobParamType>({
+        module: 'job',
+        enabled: !!groupQuery.response?.data?.thesisDto?.id,
+        params: {
+            filters: `lastModifiedDate>=${sub(date.CURR_DATE, { days: 7 })}`,
+            thesisId: groupQuery.response?.data?.thesisDto?.id,
+        },
+    });
+
+    const notificationQuery = useGetList<NotificationType, NotificationParamType>({
+        module: 'notification',
+        params: {
+            filters: `lastModifiedDate>=${sub(date.CURR_DATE, { days: 7 })}`,
+        },
+    });
+
+    const ExerciseItemHeader = (options: PanelHeaderTemplateOptions, job: JobType) => {
+        return (
+            <div
+                className={classNames(
+                    'flex align-items-center justify-content-between gap-3 p-3 cursor-pointer bg-white border-bottom-1 border-300 border-round-top p-ripple',
+                    {
+                        'border-round-bottom': options.collapsed,
+                    },
+                )}
+                onClick={options.onTogglerClick}
+            >
+                <div className='flex align-items-center gap-3'>
+                    <Button icon='pi pi-book' rounded={true} className='w-2rem h-2rem' />
+
+                    <p className='font-semibold text-sm text-900'>{job.name}</p>
+                </div>
+
+                <p className='text-sm text-700'>Đến hạn vào {moment(job.due).format('DD MMM')}</p>
+
+                <Ripple />
+            </div>
+        );
+    };
+
     return (
-        <div className='flex align-items-start flex-wrap'>
-            <div className='flex-1'>
+        <div className='flex flex-wrap'>
+            <Loader show={groupQuery.isFetching || jobQuery.isFetching || notificationQuery.isFetching} />
+
+            <div className='col-8'>
                 <div className='flex align-items-center justify-content-between'>
                     <div className='col-6'>
-                        <span className='p-input-icon-left'>
+                        {/* <span className='p-input-icon-left'>
                             <i className='pi pi-search' />
                             <InputText placeholder={t('common:search')} className='border-round-3xl w-20rem' />
-                        </span>
+                        </span> */}
                     </div>
 
                     <div className='col-6 flex justify-content-end'>
                         <AvatarGroup>
-                            <Avatar label='A' className='border-circle w-3rem h-3rem' />
-                            <Avatar label='B' className='border-circle w-3rem h-3rem' />
-                            <Avatar label='C' className='border-circle w-3rem h-3rem' />
-                            <Button label='Thêm thành viên' size='small' rounded={true} />
+                            {groupQuery.response?.data?.members?.map((member) => (
+                                <Avatar
+                                    key={member.student?.id}
+                                    label={member.student?.name?.[0]}
+                                    className='border-circle w-3rem h-3rem'
+                                />
+                            ))}
+
+                            <Link href={language.addPrefixLanguage(lng, ROUTES.thesis.invite)}>
+                                <Button label='Thêm thành viên' size='small' rounded={true} />
+                            </Link>
                         </AvatarGroup>
                     </div>
                 </div>
 
-                <div className='flex mt-5 flex-wrap'>
-                    <div className='col-12'>
-                        <Card title='Sắp đến hạn' subTitle='Danh sách bài tập đến hạn' className='flex-1'>
-                            <div className='flex gap-3 mb-4'>
-                                <Skeleton width='3rem' height='3rem' />
+                <div className='flex flex-wrap gap-3 mt-2'>
+                    <div className='w-full'>
+                        <div className='flex-1'>
+                            <Card title='Sắp đến hạn' subTitle='Danh sách bài tập đến hạn'>
+                                {jobQuery.isFetching ? (
+                                    <div className='flex flex-column gap-3'>
+                                        <div className='flex gap-3 align-items-center shadow-1 border-1 border-300 border-round overflow-hidden p-3'>
+                                            <Skeleton width='2rem' height='2rem' shape='circle' />
 
-                                <div className='flex-1'>
-                                    <Skeleton className='mb-2' />
-                                    <Skeleton className='mb-2' />
-                                </div>
-                            </div>
-                            <div className='flex gap-3 mb-4'>
-                                <Skeleton width='3rem' height='3rem' />
+                                            <div className='flex-1'>
+                                                <Skeleton className='h-2rem w-15rem' />
+                                            </div>
 
-                                <div className='flex-1'>
-                                    <Skeleton className='mb-2' />
-                                    <Skeleton className='mb-2' />
-                                </div>
-                            </div>
-                        </Card>
+                                            <Skeleton className='w-8rem h-2rem' />
+                                        </div>
+                                        <div className='flex gap-3 align-items-center shadow-1 border-1 border-300 border-round overflow-hidden p-3'>
+                                            <Skeleton width='2rem' height='2rem' shape='circle' />
+
+                                            <div className='flex-1'>
+                                                <Skeleton className='h-2rem w-15rem' />
+                                            </div>
+
+                                            <Skeleton className='w-8rem h-2rem' />
+                                        </div>
+                                        <div className='flex gap-3 align-items-center shadow-1 border-1 border-300 border-round overflow-hidden p-3'>
+                                            <Skeleton width='2rem' height='2rem' shape='circle' />
+
+                                            <div className='flex-1'>
+                                                <Skeleton className='h-2rem w-15rem' />
+                                            </div>
+
+                                            <Skeleton className='w-8rem h-2rem' />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className='flex flex-column gap-3'>
+                                        {jobQuery?.response?.data?.map((job) => (
+                                            <Panel
+                                                key={job.id}
+                                                headerTemplate={(options) => ExerciseItemHeader(options, job)}
+                                                toggleable={true}
+                                                collapsed={true}
+                                                className='shadow-1 border-1 border-300 border-round overflow-hidden'
+                                            >
+                                                <div className='p-3 pb-4'>
+                                                    <div className='flex align-items-center justify-content-between pb-3'>
+                                                        <p className='text-sm text-500 font-semibold'>
+                                                            Đã đăng vào {moment(job.lastModifiedDate).format('DD MMM')}
+                                                        </p>
+
+                                                        {/* <p className='text-sm text-500 font-semibold'>Đã nộp</p> */}
+                                                    </div>
+
+                                                    <div dangerouslySetInnerHTML={HTML(job.instructions)} />
+                                                </div>
+
+                                                <div className='flex align-items-center justify-content-between gap-3 cursor-pointer bg-white border-top-1 border-300 p-3'>
+                                                    <Link
+                                                        href={`${language.addPrefixLanguage(
+                                                            lng,
+                                                            ROUTES.thesis.job_detail,
+                                                        )}/${job.id}?topicId=${
+                                                            groupQuery.response?.data?.thesisDto?.id
+                                                        }&groupId=${groupQuery.response?.data?.id}`}
+                                                        className='p-ripple hover:bg-blue-50 hover:underline border-round'
+                                                    >
+                                                        <p className='text-blue-600 font-semibold'>Xem hướng dẫn</p>
+                                                        <Ripple />
+                                                    </Link>
+                                                </div>
+                                            </Panel>
+                                        ))}
+                                    </div>
+                                )}
+                            </Card>
+                        </div>
                     </div>
 
-                    <div className='h-full col-12'>
+                    <div className='w-full'>
                         <Card title='Điểm phản biện' className='h-full'>
                             <Chart />
                         </Card>
@@ -64,58 +198,61 @@ const HomePage = ({ params: { lng } }: PageProps) => {
             </div>
 
             <div className='col-4'>
-                <Card title='Thông báo' subTitle='3 thông báo mới từ khoa' className='mb-3'>
-                    <div className='flex gap-3 mb-4'>
-                        <Skeleton width='10rem' height='4rem' />
-                        <div className='flex-1'>
-                            <Skeleton className='mb-2' />
-                            <Skeleton className='mb-2' />
+                <Card title='Thông báo' subTitle='Thông báo mới từ khoa' className='mb-3'>
+                    {notificationQuery.isFetching ? (
+                        <div className='flex flex-column gap-3'>
+                            <div className='flex gap-3 mb-4'>
+                                <Skeleton width='6rem' height='4rem' />
+                                <div className='flex-1'>
+                                    <Skeleton className='mb-2' />
+                                    <Skeleton className='mb-2' />
+                                </div>
+                            </div>
+                            <div className='flex gap-3 mb-4'>
+                                <Skeleton width='6rem' height='4rem' />
+                                <div className='flex-1'>
+                                    <Skeleton className='mb-2' />
+                                    <Skeleton className='mb-2' />
+                                </div>
+                            </div>
+                            <div className='flex gap-3 mb-4'>
+                                <Skeleton width='6rem' height='4rem' />
+                                <div className='flex-1'>
+                                    <Skeleton className='mb-2' />
+                                    <Skeleton className='mb-2' />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div className='flex gap-3 mb-4'>
-                        <Skeleton width='10rem' height='4rem' />
-                        <div className='flex-1'>
-                            <Skeleton className='mb-2' />
-                            <Skeleton className='mb-2' />
-                        </div>
-                    </div>
-                    <div className='flex gap-3 mb-4'>
-                        <Skeleton width='10rem' height='4rem' />
-                        <div className='flex-1'>
-                            <Skeleton className='mb-2' />
-                            <Skeleton className='mb-2' />
-                        </div>
-                    </div>
-                </Card>
+                    ) : (
+                        <div className='flex flex-column gap-3'>
+                            {notificationQuery.response?.data?.map((notification) => (
+                                <div key={notification.id} className='flex gap-3 cursor-pointer'>
+                                    <CustomImage
+                                        src={notification.image?.path}
+                                        alt='hi'
+                                        width='100'
+                                        imageClassName='shadow-3 border-round'
+                                    />
 
-                <Card title='Đề tài' subTitle='3 đề tài vừa được duyệt'>
-                    <div className='flex gap-3 mb-4'>
-                        <Skeleton width='10rem' height='4rem' />
-                        <div className='flex-1'>
-                            <Skeleton className='mb-2' />
-                            <Skeleton className='mb-2' />
-                        </div>
-                    </div>
-                    <div className='flex gap-3 mb-4'>
-                        <Skeleton width='10rem' height='4rem' />
-                        <div className='flex-1'>
-                            <Skeleton className='mb-2' />
-                            <Skeleton className='mb-2' />
-                        </div>
-                    </div>
-                    <div className='flex gap-3 mb-4'>
-                        <Skeleton width='10rem' height='4rem' />
-                        <div className='flex-1'>
-                            <Skeleton className='mb-2' />
-                            <Skeleton className='mb-2' />
-                        </div>
-                    </div>
-                </Card>
-            </div>
+                                    <div className='flex flex-column justify-content-between flex-1'>
+                                        <Link
+                                            href={language.addPrefixLanguage(
+                                                lng,
+                                                `${ROUTES.information.notification}/${notification.id}`,
+                                            )}
+                                            className='text-900 font-semibold no-underline hover:text-primary'
+                                        >
+                                            {notification.name}
+                                        </Link>
 
-            <div className='col-12'>
-                <Card title='Phản biện' subTitle='Lịch phản biện diễn ra trong 1 tuần'>
-                    <FullCalendar />
+                                        <p className='text-right text-xs'>
+                                            {moment(notification.lastModifiedDate).format('DD/MM/YYYY')}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </Card>
             </div>
         </div>

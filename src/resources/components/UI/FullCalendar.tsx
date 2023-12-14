@@ -1,11 +1,25 @@
 'use client';
 
 import { date } from '@assets/helpers';
-import { differenceInMinutes, format, getDay, isWithinInterval, max, min, set } from 'date-fns';
+import {
+    add,
+    differenceInMinutes,
+    endOfWeek,
+    format,
+    getDay,
+    isWithinInterval,
+    max,
+    min,
+    set,
+    startOfWeek,
+    sub,
+} from 'date-fns';
 import { Tooltip } from 'primereact/tooltip';
 import { classNames } from 'primereact/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Loader } from '.';
+import { Button } from 'primereact/button';
+import { Calendar } from 'primereact/calendar';
 
 interface DataType {
     label: string;
@@ -49,27 +63,32 @@ const test_data: DataType[] = [
 
 const FullCalendar = () => {
     const dateRefs = useRef<HTMLDivElement[] | null[]>([]);
+    const [curr, setCurr] = useState(date.CURR_DATE);
     const [show, setShow] = useState(false);
 
-    const validData = test_data.filter((t) =>
-        isWithinInterval(t.start, {
-            start: date.START_OF_WEEK,
-            end: date.END_OF_WEEK,
-        }),
+    const validData = useMemo(
+        () =>
+            test_data.filter((t) =>
+                isWithinInterval(t.start, {
+                    start: startOfWeek(curr),
+                    end: endOfWeek(curr),
+                }),
+            ),
+        [curr],
     );
 
-    const minStart = min(validData.map((t) => t.start));
-    const maxEnd = max(validData.map((t) => t.end));
+    const minStart = useMemo(() => min(validData.map((t) => t.start)), [validData]);
+    const maxEnd = useMemo(() => max(validData.map((t) => t.end)), [validData]);
 
     const timeLines: (string | undefined)[] = useMemo(() => {
         let result: (string | undefined)[] = [];
 
-        const date1 = set(date.CURR_DATE, {
+        const date1 = set(curr, {
             hours: maxEnd.getHours(),
             minutes: maxEnd.getMinutes(),
         });
 
-        const date2 = set(date.CURR_DATE, {
+        const date2 = set(curr, {
             hours: minStart.getHours(),
             minutes: minStart.getMinutes(),
         });
@@ -85,11 +104,15 @@ const FullCalendar = () => {
         }
 
         return result;
-    }, [maxEnd, minStart]);
+    }, [curr, maxEnd, minStart]);
 
     const CalendarItem = ({ item }: { item: DataType }) => {
         const index = getDay(item.start) - 1;
         const parent = dateRefs.current[index]!;
+
+        if (!parent) {
+            return;
+        }
 
         const diffHours = item.start.getHours() - minStart.getHours();
         const diffMinutes = item.start.getMinutes() - minStart.getMinutes();
@@ -133,113 +156,165 @@ const FullCalendar = () => {
     }, []);
 
     return (
-        <div className='border-round overflow-hidden shadow-3'>
-            <div className='flex align-items-center justify-content-between relative'>
-                <div className='bg-primary text-center border-right-1 border-400 h-3rem w-4rem'></div>
-                {date.DATES_IN_WEEK.map((_date, index) => (
-                    <div
-                        key={_date.toString()}
-                        ref={(ref) => (dateRefs.current[index] = ref)}
-                        className={classNames(
-                            'bg-primary flex-1 text-center border-400 h-3rem flex align-items-center justify-content-center',
-                            {
-                                'border-right-1': index < 6,
-                            },
-                        )}
-                    >
-                        {format(_date, 'dd/MM/yyyy')}
-                    </div>
-                ))}
+        <div className='flex flex-column gap-3'>
+            <div className='flex align-items-center gap-3'>
+                <Button
+                    icon='pi pi-chevron-left'
+                    rounded={true}
+                    size='small'
+                    onClick={() => {
+                        setCurr(
+                            sub(curr, {
+                                days: 7,
+                            }),
+                        );
+                    }}
+                />
 
-                {show && validData.map((item) => <CalendarItem item={item} key={item.start.toString()} />)}
+                <Calendar
+                    locale='vi'
+                    hideOnDateTimeSelect={true}
+                    value={curr}
+                    hourFormat='24'
+                    dateFormat='dd/mm/yy'
+                    showButtonBar={true}
+                    onChange={(e) => {
+                        if (e.target.value) setCurr(e.target.value);
+                    }}
+                    inputClassName='w-7rem'
+                />
+
+                <Button
+                    icon='pi pi-chevron-right'
+                    rounded={true}
+                    size='small'
+                    onClick={() => {
+                        setCurr(
+                            add(curr, {
+                                days: 7,
+                            }),
+                        );
+                    }}
+                />
             </div>
 
-            <div className='bg-white'>
-                {timeLines.map((timeLine, index) => (
-                    <div key={Math.random().toString()} className='flex align-items-center justify-content-between'>
+            <div className='border-round overflow-hidden shadow-3'>
+                <div className='flex align-items-center justify-content-between relative'>
+                    <div className='bg-primary text-center border-right-1 border-400 h-3rem w-4rem'></div>
+                    {date.DATES_IN_WEEK(curr).map((_date, index) => (
                         <div
-                            className={classNames('bg-primary w-4rem border-400 text-center', {
-                                'border-top-1 ': !!timeLine,
-                                'border-right-1': index < 6,
-                            })}
-                            style={{
-                                height: timeLine ? 22.4 : 15,
-                            }}
+                            key={_date.toString()}
+                            ref={(ref) => (dateRefs.current[index] = ref)}
+                            className={classNames(
+                                'bg-primary flex-1 text-center border-400 h-3rem flex align-items-center justify-content-center',
+                                {
+                                    'border-right-1': index < 6,
+                                },
+                            )}
                         >
-                            {timeLine}
+                            {format(_date, 'dd/MM/yyyy')}
                         </div>
-                        <div
-                            className={classNames('flex-1 border-right-1 border-400', {
-                                'text-white': timeLine,
-                            })}
-                            style={{
-                                height: timeLine ? 22.4 : 15,
-                            }}
-                        >
-                            {timeLine ? '.' : null}
-                        </div>
-                        <div
-                            className={classNames('flex-1 border-right-1 border-400', {
-                                'text-white': timeLine,
-                            })}
-                            style={{
-                                height: timeLine ? 22.4 : 15,
-                            }}
-                        >
-                            {timeLine ? '.' : null}
-                        </div>
-                        <div
-                            className={classNames('flex-1 border-right-1 border-400', {
-                                'text-white': timeLine,
-                            })}
-                            style={{
-                                height: timeLine ? 22.4 : 15,
-                            }}
-                        >
-                            {timeLine ? '.' : null}
-                        </div>
-                        <div
-                            className={classNames('flex-1 border-right-1 border-400', {
-                                'text-white': timeLine,
-                            })}
-                            style={{
-                                height: timeLine ? 22.4 : 15,
-                            }}
-                        >
-                            {timeLine ? '.' : null}
-                        </div>
-                        <div
-                            className={classNames('flex-1 border-right-1 border-400', {
-                                'text-white': timeLine,
-                            })}
-                            style={{
-                                height: timeLine ? 22.4 : 15,
-                            }}
-                        >
-                            {timeLine ? '.' : null}
-                        </div>
-                        <div
-                            className={classNames('flex-1 border-right-1 border-400', {
-                                'text-white': timeLine,
-                            })}
-                            style={{
-                                height: timeLine ? 22.4 : 15,
-                            }}
-                        >
-                            {timeLine ? '.' : null}
-                        </div>
-                        <div
-                            className={classNames('flex-1 border-400', {
-                                'text-white': timeLine,
-                            })}
-                            style={{
-                                height: timeLine ? 22.4 : 15,
-                            }}
-                        >
-                            {timeLine ? '.' : null}
-                        </div>
-                    </div>
-                ))}
+                    ))}
+
+                    {show &&
+                        dateRefs.current.length > 0 &&
+                        validData.map((item) => <CalendarItem item={item} key={item.start.toString()} />)}
+                </div>
+
+                <div className='bg-white'>
+                    {timeLines.length > 0 ? (
+                        timeLines.map((timeLine, index) => (
+                            <div
+                                key={Math.random().toString()}
+                                className='flex align-items-center justify-content-between'
+                            >
+                                <div
+                                    className={classNames('bg-primary w-4rem border-400 text-center', {
+                                        'border-top-1 ': !!timeLine,
+                                        'border-right-1': index < 6,
+                                    })}
+                                    style={{
+                                        height: timeLine ? 22.4 : 15,
+                                    }}
+                                >
+                                    {timeLine}
+                                </div>
+                                <div
+                                    className={classNames('flex-1 border-right-1 border-400', {
+                                        'text-white': timeLine,
+                                    })}
+                                    style={{
+                                        height: timeLine ? 22.4 : 15,
+                                    }}
+                                >
+                                    {timeLine ? '.' : null}
+                                </div>
+                                <div
+                                    className={classNames('flex-1 border-right-1 border-400', {
+                                        'text-white': timeLine,
+                                    })}
+                                    style={{
+                                        height: timeLine ? 22.4 : 15,
+                                    }}
+                                >
+                                    {timeLine ? '.' : null}
+                                </div>
+                                <div
+                                    className={classNames('flex-1 border-right-1 border-400', {
+                                        'text-white': timeLine,
+                                    })}
+                                    style={{
+                                        height: timeLine ? 22.4 : 15,
+                                    }}
+                                >
+                                    {timeLine ? '.' : null}
+                                </div>
+                                <div
+                                    className={classNames('flex-1 border-right-1 border-400', {
+                                        'text-white': timeLine,
+                                    })}
+                                    style={{
+                                        height: timeLine ? 22.4 : 15,
+                                    }}
+                                >
+                                    {timeLine ? '.' : null}
+                                </div>
+                                <div
+                                    className={classNames('flex-1 border-right-1 border-400', {
+                                        'text-white': timeLine,
+                                    })}
+                                    style={{
+                                        height: timeLine ? 22.4 : 15,
+                                    }}
+                                >
+                                    {timeLine ? '.' : null}
+                                </div>
+                                <div
+                                    className={classNames('flex-1 border-right-1 border-400', {
+                                        'text-white': timeLine,
+                                    })}
+                                    style={{
+                                        height: timeLine ? 22.4 : 15,
+                                    }}
+                                >
+                                    {timeLine ? '.' : null}
+                                </div>
+                                <div
+                                    className={classNames('flex-1 border-400', {
+                                        'text-white': timeLine,
+                                    })}
+                                    style={{
+                                        height: timeLine ? 22.4 : 15,
+                                    }}
+                                >
+                                    {timeLine ? '.' : null}
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p className='py-5 font-semibold text-center'>Không có lịch nào diễn ra trong tuần</p>
+                    )}
+                </div>
             </div>
         </div>
     );

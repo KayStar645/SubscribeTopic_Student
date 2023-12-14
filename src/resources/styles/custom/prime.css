@@ -45,8 +45,16 @@
     border-radius: 0;
 }
 
+.p-card .p-card-content {
+    padding-bottom: 0;
+}
+
 .p-panel .p-panel-header {
     border-left: none;
     border-right: none;
     border-top: none;
+}
+
+.p-skeleton-circle {
+    border-radius: 50% !important;
 }
