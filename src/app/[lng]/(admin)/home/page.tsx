@@ -35,7 +35,7 @@ const HomePage = ({ params: { lng } }: PageProps) => {
 
                 <div className='flex mt-5 flex-wrap'>
                     <div className='col-12'>
-                        <Card title='Sắp đến hạn' subTitle='Danh sách bài tập đến hạn' className='w-full'>
+                        <Card title='Sắp đến hạn' subTitle='Danh sách bài tập đến hạn' className='flex-1'>
                             <div className='flex gap-3 mb-4'>
                                 <Skeleton width='3rem' height='3rem' />
 
