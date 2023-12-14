@@ -94,6 +94,8 @@ const FullCalendar = () => {
         const diffHours = item.start.getHours() - minStart.getHours();
         const diffMinutes = item.start.getMinutes() - minStart.getMinutes();
 
+        const target = `calendar-item-${Math.floor(Math.random() * 1000)}`;
+
         // bonus size
         const bonusHeight = item.start.getMinutes();
         const bonusTop = diffHours * 45 + diffHours * 22.4 + diffMinutes + 22.4;
@@ -108,20 +110,20 @@ const FullCalendar = () => {
             <>
                 <div
                     style={{ height, left, top, width }}
-                    className='bg-red-400 calendar-item absolute border-round px-3 py-2 overflow-hidden'
+                    className={classNames('bg-red-400 absolute border-round px-3 py-2 overflow-hidden', target)}
                 >
                     <p>{item.label}</p>
                     <p>{item.address}</p>
                     <p>{format(item.start, 'HH:mm')}</p>
                     <p>{format(item.end, 'HH:mm')}</p>
-                </div>
 
-                <Tooltip target='.calendar-item' mouseTrack={true} mouseTrackLeft={20}>
-                    <p>{item.label}</p>
-                    <p>{item.address}</p>
-                    <p>{format(item.start, 'HH:mm')}</p>
-                    <p>{format(item.end, 'HH:mm')}</p>
-                </Tooltip>
+                    <Tooltip target={`.${target}`} mouseTrack={true} mouseTrackLeft={20}>
+                        <p>{item.label}</p>
+                        <p>{item.address}</p>
+                        <p>{format(item.start, 'HH:mm')}</p>
+                        <p>{format(item.end, 'HH:mm')}</p>
+                    </Tooltip>
+                </div>
             </>
         );
     };
