@@ -1,9 +1,11 @@
 import { ConfirmModalRefType, ConfirmModalType } from '@assets/types/modal';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
-import { MouseEvent, forwardRef, useImperativeHandle } from 'react';
+import { MouseEvent, forwardRef, useImperativeHandle, useState } from 'react';
 
 const ConfirmModal = forwardRef<ConfirmModalRefType, ConfirmModalType>(
     ({ acceptLabel, rejectLabel, onAccept, onReject }, ref) => {
+        const [result, setResult] = useState(false);
+
         const show = (event: MouseEvent, data: any, message: string) => {
             confirmPopup({
                 target: event.target as HTMLElement,
@@ -14,13 +16,22 @@ const ConfirmModal = forwardRef<ConfirmModalRefType, ConfirmModalType>(
                 acceptClassName: 'p-button-danger',
                 acceptLabel: acceptLabel || 'Yes',
                 rejectLabel: rejectLabel || 'No',
-                accept: () => onAccept?.(data),
-                reject: onReject,
+                accept: () => {
+                    onAccept?.(data);
+
+                    setResult(true);
+                },
+                reject: () => {
+                    onReject?.();
+
+                    setResult(false);
+                },
             });
         };
 
         useImperativeHandle(ref, () => ({
             show,
+            result,
         }));
 
         return <ConfirmPopup />;

@@ -128,12 +128,12 @@ const JobPage = ({ params, searchParams }: PageProps) => {
         t,
         job: jobDetail.response?.data,
         comments: exchangeQuery.response?.data || [],
-        exercise: exerciseQuery.response?.data?.[0].files || [],
+        exercise: exerciseQuery.response?.data?.[0]?.files || [],
     };
 
     return (
         <JobPageContext.Provider value={jobPageValue}>
-            <div className='flex pr-2 gap-5'>
+            <div className='flex pr-2 gap-3'>
                 <Loader
                     show={
                         jobDetail.isFetching ||

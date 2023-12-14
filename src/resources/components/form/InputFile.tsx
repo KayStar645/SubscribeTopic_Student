@@ -15,6 +15,8 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import { memo, useEffect, useRef, useState } from 'react';
 import { CustomImage, Loader } from '../UI';
+import { ConfirmModalRefType } from '@assets/types/modal';
+import { ConfirmModal } from '../modal';
 
 const InputFile = memo(
     ({
@@ -35,6 +37,7 @@ const InputFile = memo(
         const inputRef = useRef<HTMLInputElement>(null);
         const [files, setFiles] = useState<FileType[]>(value || []);
         const [defaultFile, setDefaultFile] = useState<FileType | undefined>(defaultValue);
+        const confirmModalRef = useRef<ConfirmModalRefType>(null);
 
         const fileMutation = useMutation<
             AxiosResponse<ResponseType<FileType>>,
@@ -53,6 +56,14 @@ const InputFile = memo(
                 });
             },
         });
+
+        const onRemove = (data: number) => {
+            onChange({
+                file: defaultFile,
+                files: files.filter((t, i) => i !== data),
+            });
+            setFiles(files.filter((t, i) => i !== data));
+        };
 
         const File = ({ file }: { file: FileType }) => {
             const size = Math.ceil(file.sizeInBytes / 1024);
@@ -219,12 +230,12 @@ const InputFile = memo(
                                             )}
                                             <i
                                                 className='pi pi-trash cursor-pointer hover:text-red-600'
-                                                onClick={() => {
-                                                    onChange({
-                                                        file: defaultFile,
-                                                        files: files.filter((t, i) => i !== index),
-                                                    });
-                                                    setFiles(files.filter((t, i) => i !== index));
+                                                onClick={(e) => {
+                                                    confirmModalRef.current?.show?.(
+                                                        e,
+                                                        index,
+                                                        'Bạn có chắc muốn xóa file này',
+                                                    );
                                                 }}
                                             />
                                         </div>
@@ -237,6 +248,8 @@ const InputFile = memo(
                         )}
                     </div>
                 </div>
+
+                <ConfirmModal ref={confirmModalRef} onAccept={onRemove} acceptLabel='Đồng ý' rejectLabel='Hủy' />
             </div>
         );
     },

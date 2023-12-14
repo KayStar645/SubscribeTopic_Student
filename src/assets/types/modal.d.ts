@@ -4,7 +4,8 @@ import { OptionType } from './common';
 import { LanguageType } from './lang';
 
 interface ConfirmModalRefType {
-    show?: (event: MouseEvent, data: any, message: string) => void;
+    show: (event: MouseEvent, data: any, message: string) => void;
+    result: boolean;
 }
 
 interface ConfirmModalType {
