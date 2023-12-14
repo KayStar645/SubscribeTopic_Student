@@ -1,4 +1,5 @@
 import { PageProps } from '@assets/types/UI';
+import FullCalendar from '@resources/components/UI/FullCalendar';
 import Chart from '@resources/components/layout/Chart';
 import { useTranslation } from '@resources/i18n';
 import { Avatar } from 'primereact/avatar';
@@ -12,7 +13,7 @@ const HomePage = ({ params: { lng } }: PageProps) => {
     const { t } = useTranslation(lng);
 
     return (
-        <div className='flex align-items-start gap-3'>
+        <div className='flex align-items-start flex-wrap'>
             <div className='flex-1'>
                 <div className='flex align-items-center justify-content-between'>
                     <div className='col-6'>
@@ -32,28 +33,9 @@ const HomePage = ({ params: { lng } }: PageProps) => {
                     </div>
                 </div>
 
-                <div className='flex mt-5 flex-wrap gap-3'>
-                    <div className='flex-1 flex flex-column gap-3'>
-                        <Card title='Sắp đến hạn' subTitle='Danh sách bài tập đến hạn'>
-                            <div className='flex gap-3 mb-4'>
-                                <Skeleton width='3rem' height='3rem' />
-
-                                <div className='flex-1'>
-                                    <Skeleton className='mb-2' />
-                                    <Skeleton className='mb-2' />
-                                </div>
-                            </div>
-                            <div className='flex gap-3 mb-4'>
-                                <Skeleton width='3rem' height='3rem' />
-
-                                <div className='flex-1'>
-                                    <Skeleton className='mb-2' />
-                                    <Skeleton className='mb-2' />
-                                </div>
-                            </div>
-                        </Card>
-
-                        <Card title='Hoàn thành' subTitle='Danh sách bài tập đã hoàn thành'>
+                <div className='flex mt-5 flex-wrap'>
+                    <div className='col-12'>
+                        <Card title='Sắp đến hạn' subTitle='Danh sách bài tập đến hạn' className='w-full'>
                             <div className='flex gap-3 mb-4'>
                                 <Skeleton width='3rem' height='3rem' />
 
@@ -73,14 +55,10 @@ const HomePage = ({ params: { lng } }: PageProps) => {
                         </Card>
                     </div>
 
-                    <div className='h-full'>
+                    <div className='h-full col-12'>
                         <Card title='Điểm phản biện' className='h-full'>
                             <Chart />
                         </Card>
-                    </div>
-
-                    <div className='w-full'>
-                        <Card title='Phản biện' subTitle='Lịch phản biện diễn ra trong 1 tuần'></Card>
                     </div>
                 </div>
             </div>
@@ -132,6 +110,12 @@ const HomePage = ({ params: { lng } }: PageProps) => {
                             <Skeleton className='mb-2' />
                         </div>
                     </div>
+                </Card>
+            </div>
+
+            <div className='col-12'>
+                <Card title='Phản biện' subTitle='Lịch phản biện diễn ra trong 1 tuần'>
+                    <FullCalendar />
                 </Card>
             </div>
         </div>
