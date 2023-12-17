@@ -15,6 +15,8 @@ interface TopicType extends GeneralType {
     lecturerThesis?: TeacherType;
     status?: 'A' | 'AR' | 'D';
     groupDto?: GroupType;
+    messages?: string[];
+    isRegister?: boolean;
 }
 
 interface TopicParamType extends ParamType {

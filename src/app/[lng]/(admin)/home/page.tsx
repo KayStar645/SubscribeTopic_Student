@@ -164,7 +164,7 @@ const HomePage = ({ params: { lng } }: PageProps) => {
                                                         {/* <p className='text-sm text-500 font-semibold'>Đã nộp</p> */}
                                                     </div>
 
-                                                    <div dangerouslySetInnerHTML={HTML(job.instructions)} />
+                                                    <div dangerouslySetInnerHTML={HTML(job.instructions || '')} />
                                                 </div>
 
                                                 <div className='flex align-items-center justify-content-between gap-3 cursor-pointer bg-white border-top-1 border-300 p-3'>

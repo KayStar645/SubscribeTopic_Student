@@ -18,6 +18,7 @@ const list = (params: any) => ({
     exchange: ['exchanges', 'list', params],
     job_result: ['job_results', 'list', params],
     feedback: ['feedbacks', 'list', params],
+    schedule: ['schedules', 'list', params],
 });
 
 const detail = () => ({
@@ -25,6 +26,7 @@ const detail = () => ({
     group: ['group_detail', 'detail'],
     topic: ['topic', 'detail'],
     job: ['job', 'detail'],
+    schedule: ['schedule', 'detail'],
 });
 
 export { list, detail };

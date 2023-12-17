@@ -153,6 +153,28 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                         header='Chuyên ngành phù hợp'
                         body={(data: TopicType) => <div>{data.thesisMajors?.map((t) => t.name).join(', ')}</div>}
                     />
+                    <Column
+                        alignHeader='center'
+                        headerStyle={{
+                            background: 'var(--primary-color)',
+                            color: 'var(--surface-a)',
+                            whiteSpace: 'nowrap',
+                        }}
+                        header='Trạng thái'
+                        body={(data: TopicType) => (
+                            <p className='text-center'>{data.isRegister ? 'Đã được đăng ký' : 'Chưa được đăng ký'}</p>
+                        )}
+                    />
+                    <Column
+                        alignHeader='center'
+                        headerStyle={{
+                            background: 'var(--primary-color)',
+                            color: 'var(--surface-a)',
+                            whiteSpace: 'nowrap',
+                        }}
+                        header='Ghi chú'
+                        body={(data: TopicType) => <div>{data.messages?.join(', ')}</div>}
+                    />
                 </DataTable>
 
                 <div className='flex align-items-center justify-content-between bg-white px-3 py-2'>
@@ -316,6 +338,7 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                                 <Button
                                     label='Đăng ký'
                                     size='small'
+                                    visible={!selected?.isRegister}
                                     onClick={() => {
                                         topicMutation.mutate(
                                             {

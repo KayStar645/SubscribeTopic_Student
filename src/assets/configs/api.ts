@@ -37,6 +37,8 @@ const API = {
         job_result: '/jobResults',
 
         feedback: '/feedback',
+
+        schedule: '/reportSchedule',
     },
 
     detail: {
@@ -44,6 +46,7 @@ const API = {
         group: '/group/detail',
         topic: '/thesis/detail',
         job: '/job/detail',
+        schedule: '/reportSchedule/detail',
     },
 
     post: {
