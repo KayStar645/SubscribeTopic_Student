@@ -39,6 +39,8 @@ const API = {
         feedback: '/feedback',
 
         schedule: '/reportSchedule',
+
+        point_by_thesis: '/point/thesis',
     },
 
     detail: {

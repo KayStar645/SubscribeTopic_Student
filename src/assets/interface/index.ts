@@ -19,3 +19,4 @@ export * from './Job';
 export * from './Exchange';
 export * from './JobResult';
 export * from './Schedule';
+export * from './Point';

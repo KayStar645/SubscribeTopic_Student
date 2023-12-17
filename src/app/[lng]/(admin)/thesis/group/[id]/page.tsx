@@ -12,6 +12,7 @@ import { createContext, useMemo, useState } from 'react';
 import ExerciseTab from '../tab/ExerciseTab';
 import MemberTab from '../tab/MemberTab';
 import NewsTab from '../tab/NewsTab';
+import ResultTab from '../tab/Result';
 
 type GroupPageContextType = {
     id: number;
@@ -19,6 +20,7 @@ type GroupPageContextType = {
     lng: string;
     topic?: TopicType | null;
     jobs?: JobType[];
+    active: string;
 };
 
 const GroupPageContext = createContext<GroupPageContextType>({
@@ -27,6 +29,7 @@ const GroupPageContext = createContext<GroupPageContextType>({
     lng: 'vi',
     topic: null,
     jobs: [],
+    active: 'news',
 });
 
 const GroupPage = ({ params }: PageProps) => {
@@ -75,6 +78,10 @@ const GroupPage = ({ params }: PageProps) => {
                 value: 'member',
                 label: 'Thành viên',
             },
+            {
+                value: 'point',
+                label: 'Kết quả',
+            },
         ],
         [],
     );
@@ -85,6 +92,7 @@ const GroupPage = ({ params }: PageProps) => {
         lng,
         topic: topicDetail.response?.data,
         jobs: jobDetail.response?.data || [],
+        active: activeTab,
     };
 
     return (
@@ -119,6 +127,7 @@ const GroupPage = ({ params }: PageProps) => {
                 {activeTab === 'news' && <NewsTab />}
                 {activeTab === 'exercise' && <ExerciseTab />}
                 {activeTab === 'member' && <MemberTab />}
+                {activeTab === 'point' && <ResultTab />}
             </div>
         </GroupPageContext.Provider>
     );

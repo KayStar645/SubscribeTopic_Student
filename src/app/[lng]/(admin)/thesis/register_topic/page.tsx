@@ -162,7 +162,7 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                         }}
                         header='Trạng thái'
                         body={(data: TopicType) => (
-                            <p className='text-center'>{data.isRegister ? 'Đã được đăng ký' : 'Chưa được đăng ký'}</p>
+                            <p className='text-center'>{data.isRegister ? 'Được đăng ký' : 'Không đăng ký được'}</p>
                         )}
                     />
                     <Column
@@ -338,7 +338,7 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                                 <Button
                                     label='Đăng ký'
                                     size='small'
-                                    visible={!selected?.isRegister}
+                                    visible={selected?.isRegister}
                                     onClick={() => {
                                         topicMutation.mutate(
                                             {

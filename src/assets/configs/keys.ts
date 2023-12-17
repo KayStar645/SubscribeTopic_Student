@@ -19,6 +19,7 @@ const list = (params: any) => ({
     job_result: ['job_results', 'list', params],
     feedback: ['feedbacks', 'list', params],
     schedule: ['schedules', 'list', params],
+    point_by_thesis: ['point_by_thesis', 'list', params],
 });
 
 const detail = () => ({
