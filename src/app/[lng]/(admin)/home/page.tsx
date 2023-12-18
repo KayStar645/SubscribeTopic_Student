@@ -59,13 +59,6 @@ const HomePage = ({ params: { lng } }: PageProps) => {
         },
     });
 
-    const pointQuery = useGetList<PointType, PointParamType>({
-        module: 'point_by_thesis',
-        params: {
-            isGetThesisCurrentMe: true,
-        },
-    });
-
     const ExerciseItemHeader = (options: PanelHeaderTemplateOptions, job: JobType) => {
         return (
             <div

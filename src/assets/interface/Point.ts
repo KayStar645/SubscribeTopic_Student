@@ -18,6 +18,7 @@ interface PointType extends GeneralType {
 interface PointParamType extends ParamType {
     isGetThesisCurrentMe?: boolean;
     thesisId?: number;
+    isGetPointMe?: boolean;
 }
 
 export type { PointParamType, PointType };

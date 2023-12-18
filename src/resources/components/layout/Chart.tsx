@@ -2,27 +2,38 @@
 
 import React, { useState, useEffect } from 'react';
 import { Chart as PrimeChart } from 'primereact/chart';
+import { PointParamType, PointType } from '@assets/interface';
+import { useGetList } from '@assets/hooks/useGet';
 
 const Chart = () => {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
+
+    const pointQuery = useGetList<PointType, PointParamType>({
+        module: 'point_by_thesis',
+        params: {
+            isGetPointMe: true,
+        },
+    });
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
         const data = {
-            labels: ['Giáo viên 1', 'Giáo viên 2', 'Giáo viên 3'],
+            labels: pointQuery?.response?.data?.[0].scores?.map((t) => t.teacher.name),
             datasets: [
                 {
-                    label: 'Điểm phản biện',
+                    label: 'Điểm/Kết quả',
                     backgroundColor: documentStyle.getPropertyValue('--blue-500'),
                     borderColor: documentStyle.getPropertyValue('--blue-500'),
-                    data: [8, 7, 8],
+                    data: pointQuery?.response?.data?.[0].scores?.map((t) => t.score),
                 },
             ],
         };
+
         const options = {
             maintainAspectRatio: false,
             aspectRatio: 0.8,
@@ -60,7 +71,7 @@ const Chart = () => {
 
         setChartData(data);
         setChartOptions(options);
-    }, []);
+    }, [pointQuery.response?.data]);
 
     return <PrimeChart type='bar' data={chartData} options={chartOptions} />;
 };
