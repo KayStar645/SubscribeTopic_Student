@@ -83,6 +83,7 @@ const ScheduleForm = forwardRef<ScheduleFormRefType, ScheduleFormType>(({ title,
                         <InputText
                             id='form_data_teacher_id'
                             value={field.value}
+                            disabled={true}
                             label='Đề tài'
                             placeholder='Đề tài'
                             errorMessage={fieldState.error?.message}
@@ -94,6 +95,7 @@ const ScheduleForm = forwardRef<ScheduleFormRefType, ScheduleFormType>(({ title,
                 <InputDate
                     id='form_data_time_end'
                     value={date}
+                    disabled={true}
                     label='Ngày'
                     placeholder='Ngày'
                     onChange={(e) => {
@@ -113,6 +115,7 @@ const ScheduleForm = forwardRef<ScheduleFormRefType, ScheduleFormType>(({ title,
                                 blockClassName='flex-1'
                                 placeholder={t('common:time_start')}
                                 timeOnly={true}
+                                disabled={true}
                                 showButtonBar={false}
                                 errorMessage={fieldState.error?.message}
                                 onChange={field.onChange}
@@ -131,6 +134,7 @@ const ScheduleForm = forwardRef<ScheduleFormRefType, ScheduleFormType>(({ title,
                                 blockClassName='flex-1'
                                 placeholder={t('common:time_end')}
                                 timeOnly={true}
+                                disabled={true}
                                 showButtonBar={false}
                                 errorMessage={fieldState.error?.message}
                                 onChange={field.onChange}
@@ -156,6 +160,7 @@ const ScheduleForm = forwardRef<ScheduleFormRefType, ScheduleFormType>(({ title,
                             ]}
                             value={field.value}
                             label='Loại lịch'
+                            disabled={true}
                             placeholder='Loại lịch'
                             errorMessage={fieldState.error?.message}
                             onChange={field.onChange}
@@ -171,6 +176,7 @@ const ScheduleForm = forwardRef<ScheduleFormRefType, ScheduleFormType>(({ title,
                             id='form_data_address'
                             value={field.value}
                             label={t('address')}
+                            disabled={true}
                             placeholder={t('address')}
                             errorMessage={fieldState.error?.message}
                             onChange={field.onChange}
@@ -180,7 +186,7 @@ const ScheduleForm = forwardRef<ScheduleFormRefType, ScheduleFormType>(({ title,
 
                 <div className='flex align-items-center justify-content-end gap-2 absolute bottom-0 left-0 right-0 bg-white p-4'>
                     <Button
-                        label={t('cancel')}
+                        label='Quay lại'
                         icon='pi pi-undo'
                         severity='secondary'
                         onClick={(e) => {
@@ -188,7 +194,6 @@ const ScheduleForm = forwardRef<ScheduleFormRefType, ScheduleFormType>(({ title,
                             close();
                         }}
                     />
-                    <Button label={t('save')} icon='pi pi-save' />
                 </div>
             </form>
         </Dialog>

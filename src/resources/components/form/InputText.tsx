@@ -12,6 +12,7 @@ const InputText = ({
     row = false,
     required = false,
     errorMessage,
+    disabled = false,
     onChange = () => {},
     onBlur = () => {},
 }: InputTextProps) => {
@@ -41,6 +42,7 @@ const InputText = ({
                     id={id}
                     value={inputValue}
                     placeholder={placeholder}
+                    disabled={disabled}
                     spellCheck={false}
                     style={{ height: '47px' }}
                     className={classNames('w-full flex-1 px-3', { 'p-invalid': !!errorMessage })}

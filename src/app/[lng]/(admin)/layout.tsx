@@ -2,21 +2,16 @@
 
 import { PageProps } from '@assets/types/UI';
 import { Sidebar } from '@resources/components/layout';
-import { Divider } from 'primereact/divider';
 import { ToastContainer } from 'react-toastify';
 
 const AdminLayout = ({ children, params: { lng } }: PageProps) => {
     return (
-        <body className='min-h-screen surface-100 overflow-hidden m-0 pl-2'>
-            <div className='flex'>
+        <body className='min-h-screen surface-100 overflow-hidden m-0'>
+            <div className='flex gap-3'>
                 <Sidebar lng={lng} />
 
-                <div className='py-6'>
-                    <Divider layout='vertical' />
-                </div>
-
-                <div className='flex-1'>
-                    <div className='py-3 overflow-auto h-screen pl-1 pr-2'>{children}</div>
+                <div className='py-3 overflow-auto pr-3 h-screen' style={{ width: 'calc(100vw - 17rem)' }}>
+                    {children}
                 </div>
             </div>
 

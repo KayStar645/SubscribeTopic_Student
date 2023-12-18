@@ -159,6 +159,7 @@ const JobPage = ({ params, searchParams }: PageProps) => {
                                 multiple={true}
                                 disabled={true}
                                 hasDefault={false}
+                                fileClassName='col-6'
                             />
 
                             <Divider />

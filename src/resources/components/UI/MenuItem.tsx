@@ -114,7 +114,7 @@ const MenuItem = ({ item, permissions }: MenuItemProps) => {
                         </div>
                     )}
 
-                    <p className={classNames('flex-1 text-sm itemLabel m-0', labelClassName)}>{label}</p>
+                    <p className={classNames('flex-1 text-sm font-semibold itemLabel m-0', labelClassName)}>{label}</p>
 
                     {items && items.length > 0 && checkChildPermission && <i className='pi pi-chevron-down text-sm' />}
 

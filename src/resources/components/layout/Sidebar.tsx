@@ -52,7 +52,7 @@ const Menu = ({ lng }: LanguageType) => {
     };
 
     return (
-        <div className='flex flex-column gap-2 w-15rem h-screen relative ' style={{ zIndex: 1000 }}>
+        <div className='flex flex-column gap-2 w-15rem h-screen relative' style={{ zIndex: 1000, minWidth: '17rem' }}>
             <ul className='p-2 pt-0 overflow-y-auto h-full'>
                 <div
                     className='flex align-items-center gap-2 cursor-pointer p-1 pr-3 bg-white hover:bg-blue-200'

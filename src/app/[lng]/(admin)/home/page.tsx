@@ -11,6 +11,8 @@ import {
     JobType,
     NotificationParamType,
     NotificationType,
+    PointParamType,
+    PointType,
 } from '@assets/interface';
 import { PageProps } from '@assets/types/UI';
 import { CustomImage, Loader } from '@resources/components/UI';
@@ -57,6 +59,13 @@ const HomePage = ({ params: { lng } }: PageProps) => {
         },
     });
 
+    const pointQuery = useGetList<PointType, PointParamType>({
+        module: 'point_by_thesis',
+        params: {
+            isGetThesisCurrentMe: true,
+        },
+    });
+
     const ExerciseItemHeader = (options: PanelHeaderTemplateOptions, job: JobType) => {
         return (
             <div
@@ -82,10 +91,10 @@ const HomePage = ({ params: { lng } }: PageProps) => {
     };
 
     return (
-        <div className='flex flex-wrap'>
+        <div className='flex gap-3'>
             <Loader show={groupQuery.isFetching || jobQuery.isFetching || notificationQuery.isFetching} />
 
-            <div className='col-8'>
+            <div className='flex-1'>
                 <div className='flex align-items-center justify-content-between'>
                     <div className='col-6'>
                         {/* <span className='p-input-icon-left'>
@@ -112,40 +121,40 @@ const HomePage = ({ params: { lng } }: PageProps) => {
                 </div>
 
                 <div className='flex flex-wrap gap-3 mt-2'>
-                    <div className='w-full'>
-                        <div className='flex-1'>
-                            <Card title='Sắp đến hạn' subTitle='Danh sách bài tập đến hạn'>
-                                {jobQuery.isFetching ? (
-                                    <div className='flex flex-column gap-3'>
-                                        <div className='flex gap-3 align-items-center shadow-1 border-1 border-300 border-round overflow-hidden p-3'>
-                                            <Skeleton width='2rem' height='2rem' shape='circle' />
+                    <div className='flex-1'>
+                        <Card title='Sắp đến hạn' subTitle='Danh sách bài tập đến hạn'>
+                            {jobQuery.isFetching ? (
+                                <div className='flex flex-column gap-3'>
+                                    <div className='flex gap-3 align-items-center shadow-1 border-1 border-300 border-round overflow-hidden p-3'>
+                                        <Skeleton width='2rem' height='2rem' shape='circle' />
 
-                                            <div className='flex-1'>
-                                                <Skeleton className='h-2rem w-15rem' />
-                                            </div>
-
-                                            <Skeleton className='w-8rem h-2rem' />
+                                        <div className='flex-1'>
+                                            <Skeleton className='h-2rem w-15rem' />
                                         </div>
-                                        <div className='flex gap-3 align-items-center shadow-1 border-1 border-300 border-round overflow-hidden p-3'>
-                                            <Skeleton width='2rem' height='2rem' shape='circle' />
 
-                                            <div className='flex-1'>
-                                                <Skeleton className='h-2rem w-15rem' />
-                                            </div>
-
-                                            <Skeleton className='w-8rem h-2rem' />
-                                        </div>
-                                        <div className='flex gap-3 align-items-center shadow-1 border-1 border-300 border-round overflow-hidden p-3'>
-                                            <Skeleton width='2rem' height='2rem' shape='circle' />
-
-                                            <div className='flex-1'>
-                                                <Skeleton className='h-2rem w-15rem' />
-                                            </div>
-
-                                            <Skeleton className='w-8rem h-2rem' />
-                                        </div>
+                                        <Skeleton className='w-8rem h-2rem' />
                                     </div>
-                                ) : (
+                                    <div className='flex gap-3 align-items-center shadow-1 border-1 border-300 border-round overflow-hidden p-3'>
+                                        <Skeleton width='2rem' height='2rem' shape='circle' />
+
+                                        <div className='flex-1'>
+                                            <Skeleton className='h-2rem w-15rem' />
+                                        </div>
+
+                                        <Skeleton className='w-8rem h-2rem' />
+                                    </div>
+                                    <div className='flex gap-3 align-items-center shadow-1 border-1 border-300 border-round overflow-hidden p-3'>
+                                        <Skeleton width='2rem' height='2rem' shape='circle' />
+
+                                        <div className='flex-1'>
+                                            <Skeleton className='h-2rem w-15rem' />
+                                        </div>
+
+                                        <Skeleton className='w-8rem h-2rem' />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className=' overflow-auto' style={{ maxHeight: 230 }}>
                                     <div className='flex flex-column gap-3'>
                                         {jobQuery?.response?.data?.map((job) => (
                                             <Panel
@@ -184,20 +193,18 @@ const HomePage = ({ params: { lng } }: PageProps) => {
                                             </Panel>
                                         ))}
                                     </div>
-                                )}
-                            </Card>
-                        </div>
-                    </div>
-
-                    <div className='w-full'>
-                        <Card title='Điểm phản biện' className='h-full'>
-                            <Chart />
+                                </div>
+                            )}
                         </Card>
                     </div>
+
+                    <Card title='Điểm phản biện' className='h-full flex-1'>
+                        <Chart />
+                    </Card>
                 </div>
             </div>
 
-            <div className='col-4'>
+            <div style={{ minWidth: 400 }}>
                 <Card title='Thông báo' subTitle='Thông báo mới từ khoa' className='mb-3'>
                     {notificationQuery.isFetching ? (
                         <div className='flex flex-column gap-3'>

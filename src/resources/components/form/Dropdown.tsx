@@ -16,6 +16,7 @@ const Dropdown = ({
     optionValue = 'value',
     emptyMessage = 'No results found',
     errorMessage,
+    disabled = false,
     showClear = false,
     onChange = () => {},
 }: DropdownProps) => {
@@ -44,6 +45,7 @@ const Dropdown = ({
                     showClear={showClear}
                     emptyMessage={emptyMessage}
                     inputId={id}
+                    disabled={disabled}
                     options={options}
                     value={selected}
                     optionValue={optionValue}

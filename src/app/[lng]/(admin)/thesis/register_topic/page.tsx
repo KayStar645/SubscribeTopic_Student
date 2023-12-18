@@ -86,21 +86,6 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                     className='w-20rem'
                     onChange={(e) => debounceKeyword(e.target.value)}
                 />
-
-                <Dropdown
-                    id='thesis_lecturer'
-                    showClear={true}
-                    placeholder={t('module:field.thesis.lecturer')}
-                    options={teacherQuery?.response?.data?.map((t) => ({ label: t.name, value: t.id }))}
-                    onChange={(teacherId) => {
-                        setParams((prev) => {
-                            return {
-                                ...prev,
-                                filters: request.handleFilter(prev.filters || '', 'lecturerThesisId', '==', teacherId),
-                            };
-                        });
-                    }}
-                />
             </div>
 
             <div className='border-round-xl overflow-hidden relative shadow-2'>
@@ -198,41 +183,6 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                     <div className='flex flex-column gap-3'>
                         <p className='font-bold text-800 text-xl pb-3 text-center'>Chi tiết đề tài</p>
 
-                        <Panel
-                            toggleable={true}
-                            collapsed={true}
-                            header={t('module:field.thesis.lecturer')}
-                            className='shadow-2 border-1 border-300 border-round-xl overflow-hidden'
-                        >
-                            <div className='flex flex-column gap-3 p-3'>
-                                <div className='flex align-items-center'>
-                                    <p className='w-15rem'>
-                                        {t('common:name_of', { obj: t('module:teacher').toLowerCase() })}
-                                    </p>
-                                    <p className='text-900 font-semibold'>{response?.data?.lecturerThesis?.name}</p>
-                                </div>
-
-                                <div className='flex align-items-center'>
-                                    <p className='w-15rem'>{t('common:email')}</p>
-                                    <p className='text-900 font-semibold'>{response?.data?.lecturerThesis?.email}</p>
-                                </div>
-
-                                <div className='flex align-items-center'>
-                                    <p className='w-15rem'>{t('common:phone_number')}</p>
-                                    <p className='text-900 font-semibold'>
-                                        {response?.data?.lecturerThesis?.phoneNumber}
-                                    </p>
-                                </div>
-
-                                <div className='flex align-items-center'>
-                                    <p className='w-15rem'>{t('module:field.teacher.academic')}</p>
-                                    <p className='text-900 font-semibold'>
-                                        {response?.data?.lecturerThesis?.academicTitle}
-                                    </p>
-                                </div>
-                            </div>
-                        </Panel>
-
                         {response?.data?.thesisInstructions && response?.data?.thesisInstructions.length > 0 && (
                             <Panel
                                 toggleable={true}
@@ -270,53 +220,6 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                                             </div>
 
                                             {index < response.data?.thesisInstructions?.length! - 1 && (
-                                                <div className='px-8'>
-                                                    <Divider />
-                                                </div>
-                                            )}
-                                        </>
-                                    ))}
-                                </div>
-                            </Panel>
-                        )}
-
-                        {response?.data?.thesisReviews && response.data?.thesisReviews?.length > 0 && (
-                            <Panel
-                                toggleable={true}
-                                collapsed={true}
-                                header='Giảng viên phản biện'
-                                className='shadow-2 border-1 border-300 border-round-xl overflow-hidden'
-                            >
-                                <div className='p-3'>
-                                    {response?.data?.thesisReviews?.map((teacher, index) => (
-                                        <>
-                                            <div className='flex flex-column gap-3' key={teacher.id}>
-                                                <div className='flex align-items-center'>
-                                                    <p className='w-15rem'>
-                                                        {t('common:name_of', {
-                                                            obj: t('module:teacher').toLowerCase(),
-                                                        })}
-                                                    </p>
-                                                    <p className='text-900 font-semibold'>{teacher?.name}</p>
-                                                </div>
-
-                                                <div className='flex align-items-center'>
-                                                    <p className='w-15rem'>{t('common:email')}</p>
-                                                    <p className='text-900 font-semibold'>{teacher?.email}</p>
-                                                </div>
-
-                                                <div className='flex align-items-center'>
-                                                    <p className='w-15rem'>{t('common:phone_number')}</p>
-                                                    <p className='text-900 font-semibold'>{teacher?.phoneNumber}</p>
-                                                </div>
-
-                                                <div className='flex align-items-center'>
-                                                    <p className='w-15rem'>{t('module:field.teacher.academic')}</p>
-                                                    <p className='text-900 font-semibold'>{teacher?.academicTitle}</p>
-                                                </div>
-                                            </div>
-
-                                            {index < response.data?.thesisReviews?.length! - 1 && (
                                                 <div className='px-8'>
                                                     <Divider />
                                                 </div>

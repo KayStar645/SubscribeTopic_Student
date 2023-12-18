@@ -1,6 +1,6 @@
 import { InputFile } from '@resources/components/form/InputFile';
 import { Button } from 'primereact/button';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { JobPageContext } from './[id]/page';
 import { FileType } from '@assets/types/form';
 import { AUTH_TOKEN, MODULE } from '@assets/configs';
@@ -13,8 +13,14 @@ interface YourExerciseProps {
 
 const YourExercise = ({ onSubmit }: YourExerciseProps) => {
     const { exercise, job, groupId } = useContext(JobPageContext);
-    const [_files, setFiles] = useState<FileType[]>([]);
+    const [_files, setFiles] = useState<FileType[]>(exercise || []);
     const [auth] = useCookies<AuthType>(AUTH_TOKEN);
+
+    useEffect(() => {
+        if (exercise) {
+            setFiles(exercise);
+        }
+    }, [exercise]);
 
     return (
         <div className='flex flex-column gap-4'>
@@ -23,7 +29,7 @@ const YourExercise = ({ onSubmit }: YourExerciseProps) => {
                     <p className='text-xl font-semibold flex-1'>Bài tập của bạn</p>
 
                     <Button
-                        label='Nộp'
+                        label='Nộp bài'
                         size='small'
                         onClick={() => {
                             if (_files) {

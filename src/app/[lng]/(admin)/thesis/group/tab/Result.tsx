@@ -1,8 +1,6 @@
 import { useGetList } from '@assets/hooks/useGet';
 import { PointParamType, PointType, TeacherType } from '@assets/interface';
 import { Loader } from '@resources/components/UI';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
 import { useContext, useEffect, useState } from 'react';
 import { GroupPageContext } from '../[id]/page';
 
@@ -13,8 +11,9 @@ interface TeacherResult {
 }
 
 const ResultTab = () => {
-    const [teacherResult, setTeacherResult] = useState<TeacherResult[]>([]);
+    const [teacherResult, setTeacherResult] = useState<any[]>([]);
     const { topic, active } = useContext(GroupPageContext);
+    const [teacher, setTeacher] = useState<string[]>([]);
 
     const pointQuery = useGetList<PointType, PointParamType>({
         module: 'point_by_thesis',
@@ -26,21 +25,29 @@ const ResultTab = () => {
 
     useEffect(() => {
         if (pointQuery.response?.data) {
-            let result: TeacherResult[] = [];
+            let result: any[] = [];
+            let _teacher: string[] = [];
 
             pointQuery.response?.data.forEach((t) => {
-                result = [];
+                _teacher = [];
 
-                t.scores?.map((score) => {
-                    result.push({
-                        teacher: score.teacher,
-                        score: score.score,
-                        studentId: t.studentJoinId!,
-                    });
+                result.push({
+                    internalCode: t.studentJoin?.student.internalCode,
+                    name: t.studentJoin?.student.name,
+                    avg: t.averageScore,
+                    scores: t.scores?.map((t) => ({
+                        teacherId: t.teacher.id,
+                        score: t.score,
+                    })),
+                });
+
+                t.scores?.forEach((score) => {
+                    _teacher.push(score.teacher.name!);
                 });
             });
 
             setTeacherResult(result);
+            setTeacher(_teacher);
         }
     }, [pointQuery.response?.data]);
 
@@ -48,57 +55,41 @@ const ResultTab = () => {
         <div className='flex flex-column gap-3 bg-white border-round shadow-1 p-3'>
             <Loader show={pointQuery.isFetching} />
 
-            <DataTable
-                value={pointQuery.response?.data || []}
-                tableStyle={{ minWidth: '50rem' }}
-                className='border-round overflow-hidden'
-            >
-                <Column
-                    alignHeader='center'
-                    headerStyle={{
-                        background: 'var(--primary-color)',
-                        color: 'var(--surface-a)',
-                        whiteSpace: 'nowrap',
-                    }}
-                    header='Mã sinh viên'
-                    field='studentJoin.student.internalCode'
-                />
-                <Column
-                    alignHeader='center'
-                    headerStyle={{
-                        background: 'var(--primary-color)',
-                        color: 'var(--surface-a)',
-                        whiteSpace: 'nowrap',
-                    }}
-                    header='Tên sinh viên'
-                    field='studentJoin.student.name'
-                />
+            <div className='border-round overflow-hidden shadow-3'>
+                <table className='w-full' style={{ borderCollapse: 'collapse' }}>
+                    <thead>
+                        <tr>
+                            <th className='border-1 border-300 p-3 bg-primary'>Mã sinh viên</th>
+                            <th className='border-1 border-300 p-3 bg-primary'>Tên sinh viên</th>
+                            {teacher.map((name) => (
+                                <th className='border-1 border-300 p-3 bg-primary' key={name}>
+                                    {name}
+                                </th>
+                            ))}
+                            <th className='border-1 border-300 p-3 bg-primary'>Điểm trung bình</th>
+                        </tr>
+                    </thead>
 
-                {teacherResult.map((field) => (
-                    <Column
-                        key={field.teacher.id}
-                        alignHeader='center'
-                        headerStyle={{
-                            background: 'var(--primary-color)',
-                            color: 'var(--surface-a)',
-                            whiteSpace: 'nowrap',
-                        }}
-                        header={field.teacher.name}
-                        body={() => <p className='text-center'>{field.score > 0 ? field.score : ''}</p>}
-                    />
-                ))}
+                    <tbody>
+                        {teacherResult.map((result) => (
+                            <tr key={result.internalCode}>
+                                <td className='border-1 border-300 p-3'>{result.internalCode}</td>
+                                <td className='border-1 border-300 p-3'>{result.name}</td>
 
-                <Column
-                    alignHeader='center'
-                    headerStyle={{
-                        background: 'var(--primary-color)',
-                        color: 'var(--surface-a)',
-                        whiteSpace: 'nowrap',
-                    }}
-                    header='Điểm trung bình'
-                    body={(data) => <p className='text-center'>{data.averageScore}</p>}
-                />
-            </DataTable>
+                                {result.scores.map((field: any) => (
+                                    <td className='border-1 border-300 p-3' key={field.teacherId}>
+                                        <p className='text-center'>{field.score > 0 ? field.score : '-'}</p>
+                                    </td>
+                                ))}
+
+                                <td className='border-1 border-300 p-3'>
+                                    <p className='text-center'>{result.avg > 0 ? result.avg : '-'}</p>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

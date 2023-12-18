@@ -14,6 +14,7 @@ const InputDate = ({
     time = false,
     timeOnly = false,
     showButtonBar = true,
+    disabled = false,
     required = false,
     errorMessage,
     onChange = () => {},
@@ -42,6 +43,7 @@ const InputDate = ({
                     hideOnDateTimeSelect={true}
                     value={date}
                     hourFormat='24'
+                    disabled={disabled}
                     showButtonBar={showButtonBar}
                     placeholder={placeholder}
                     onChange={(e) => {
