@@ -26,9 +26,17 @@ const Chart = () => {
             labels: pointQuery?.response?.data?.[0].scores?.map((t) => t.teacher.name),
             datasets: [
                 {
-                    label: 'Điểm/Kết quả',
-                    backgroundColor: documentStyle.getPropertyValue('--blue-500'),
-                    borderColor: documentStyle.getPropertyValue('--blue-500'),
+                    label: 'Kết quả',
+                    backgroundColor: pointQuery.response?.data?.[0].scores?.map((score) =>
+                        score.type === 'R'
+                            ? documentStyle.getPropertyValue('--blue-600')
+                            : documentStyle.getPropertyValue('--green-500'),
+                    ),
+                    borderColor: pointQuery.response?.data?.[0].scores?.map((score) =>
+                        score.type === 'R'
+                            ? documentStyle.getPropertyValue('--blue-600')
+                            : documentStyle.getPropertyValue('--green-500'),
+                    ),
                     data: pointQuery?.response?.data?.[0].scores?.map((t) => t.score),
                 },
             ],
