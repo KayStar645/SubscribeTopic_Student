@@ -17,68 +17,70 @@ const Chart = () => {
     });
 
     useEffect(() => {
-        const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+        if (pointQuery.response?.data && pointQuery.response?.data.length > 0) {
+            const documentStyle = getComputedStyle(document.documentElement);
+            const textColor = documentStyle.getPropertyValue('--text-color');
+            const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+            const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-        const data = {
-            labels: pointQuery?.response?.data?.[0].scores?.map((t) => t.teacher.name),
-            datasets: [
-                {
-                    label: 'Kết quả',
-                    backgroundColor: pointQuery.response?.data?.[0].scores?.map((score) =>
-                        score.type === 'R'
-                            ? documentStyle.getPropertyValue('--blue-600')
-                            : documentStyle.getPropertyValue('--green-500'),
-                    ),
-                    borderColor: pointQuery.response?.data?.[0].scores?.map((score) =>
-                        score.type === 'R'
-                            ? documentStyle.getPropertyValue('--blue-600')
-                            : documentStyle.getPropertyValue('--green-500'),
-                    ),
-                    data: pointQuery?.response?.data?.[0].scores?.map((t) => t.score),
-                },
-            ],
-        };
-
-        const options = {
-            maintainAspectRatio: false,
-            aspectRatio: 0.8,
-            plugins: {
-                legend: {
-                    labels: {
-                        fontColor: textColor,
+            const data = {
+                labels: pointQuery?.response?.data?.[0].scores?.map((t) => t.teacher.name),
+                datasets: [
+                    {
+                        label: 'Kết quả',
+                        backgroundColor: pointQuery.response?.data?.[0].scores?.map((score) =>
+                            score.type === 'R'
+                                ? documentStyle.getPropertyValue('--blue-600')
+                                : documentStyle.getPropertyValue('--green-500'),
+                        ),
+                        borderColor: pointQuery.response?.data?.[0].scores?.map((score) =>
+                            score.type === 'R'
+                                ? documentStyle.getPropertyValue('--blue-600')
+                                : documentStyle.getPropertyValue('--green-500'),
+                        ),
+                        data: pointQuery?.response?.data?.[0].scores?.map((t) => t.score),
                     },
-                },
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: textColorSecondary,
-                        font: {
-                            weight: 500,
+                ],
+            };
+
+            const options = {
+                maintainAspectRatio: false,
+                aspectRatio: 0.8,
+                plugins: {
+                    legend: {
+                        labels: {
+                            fontColor: textColor,
                         },
                     },
-                    grid: {
-                        display: false,
-                        drawBorder: false,
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: textColorSecondary,
+                            font: {
+                                weight: 500,
+                            },
+                        },
+                        grid: {
+                            display: false,
+                            drawBorder: false,
+                        },
+                    },
+                    y: {
+                        ticks: {
+                            color: textColorSecondary,
+                        },
+                        grid: {
+                            color: surfaceBorder,
+                            drawBorder: false,
+                        },
                     },
                 },
-                y: {
-                    ticks: {
-                        color: textColorSecondary,
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false,
-                    },
-                },
-            },
-        };
+            };
 
-        setChartData(data);
-        setChartOptions(options);
+            setChartData(data);
+            setChartOptions(options);
+        }
     }, [pointQuery.response?.data]);
 
     return <PrimeChart type='bar' data={chartData} options={chartOptions} />;
