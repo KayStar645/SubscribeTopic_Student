@@ -191,14 +191,18 @@ const HomePage = ({ params: { lng } }: PageProps) => {
                         </Card>
                     </div>
 
-                    <Card title='Điểm phản biện' className='h-full flex-1'>
-                        <div className='flex align-items-center gap-5 pb-3'>
-                            <div className='flex align-items-center gap-2'>
-                                <Skeleton width='2rem' height='1rem' className='bg-green-500' />
+                    <Card title='Kết quả' className='h-full flex-1'>
+                        <div className='flex align-items-center flex-wrap pb-3'>
+                            <div className='flex align-items-center col-6 gap-2'>
+                                <Skeleton height='1rem' width='2rem' className='bg-green-500' />
                                 <p>Điểm giảng viên hướng dẫn</p>
                             </div>
-                            <div className='flex align-items-center gap-2'>
-                                <Skeleton width='2rem' height='1rem' className='bg-blue-500' />
+                            <div className='flex align-items-center col-6 gap-2'>
+                                <Skeleton height='1rem' width='2rem' className='bg-blue-500' />
+                                <p>Điểm giảng viên phản biện</p>
+                            </div>
+                            <div className='flex align-items-center col-6 gap-2'>
+                                <Skeleton height='1rem' width='2rem' className='bg-bluegray-800' />
                                 <p>Điểm giảng viên phản biện</p>
                             </div>
                         </div>

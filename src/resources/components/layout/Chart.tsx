@@ -31,12 +31,16 @@ const Chart = () => {
                         backgroundColor: pointQuery.response?.data?.[0].scores?.map((score) =>
                             score.type === 'R'
                                 ? documentStyle.getPropertyValue('--blue-600')
-                                : documentStyle.getPropertyValue('--green-500'),
+                                : score.type === 'I'
+                                ? documentStyle.getPropertyValue('--green-500')
+                                : documentStyle.getPropertyValue('--bluegray-800'),
                         ),
                         borderColor: pointQuery.response?.data?.[0].scores?.map((score) =>
                             score.type === 'R'
                                 ? documentStyle.getPropertyValue('--blue-600')
-                                : documentStyle.getPropertyValue('--green-500'),
+                                : score.type === 'I'
+                                ? documentStyle.getPropertyValue('--green-500')
+                                : documentStyle.getPropertyValue('--bluegray-800'),
                         ),
                         data: pointQuery?.response?.data?.[0].scores?.map((t) => t.score),
                     },
