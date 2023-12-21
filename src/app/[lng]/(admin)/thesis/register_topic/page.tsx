@@ -135,8 +135,12 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                             color: 'var(--surface-a)',
                             whiteSpace: 'nowrap',
                         }}
-                        header='Chuyên ngành phù hợp'
-                        body={(data: TopicType) => <div>{data.thesisMajors?.map((t) => t.name).join(', ')}</div>}
+                        header='Số lượng sinh viên'
+                        body={(data: TopicType) => (
+                            <p className='text-center'>
+                                {data.minQuantity} - {data.maxQuantity}
+                            </p>
+                        )}
                     />
                     <Column
                         alignHeader='center'
@@ -145,10 +149,8 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                             color: 'var(--surface-a)',
                             whiteSpace: 'nowrap',
                         }}
-                        header='Trạng thái'
-                        body={(data: TopicType) => (
-                            <p className='text-center'>{data.isRegister ? 'Được đăng ký' : 'Không đăng ký được'}</p>
-                        )}
+                        header='Chuyên ngành phù hợp'
+                        body={(data: TopicType) => <div>{data.thesisMajors?.map((t) => t.name).join(', ')}</div>}
                     />
                     <Column
                         alignHeader='center'
@@ -206,11 +208,6 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                                                 <div className='flex align-items-center'>
                                                     <p className='w-15rem'>{t('common:email')}</p>
                                                     <p className='text-900 font-semibold'>{teacher?.email}</p>
-                                                </div>
-
-                                                <div className='flex align-items-center'>
-                                                    <p className='w-15rem'>{t('common:phone_number')}</p>
-                                                    <p className='text-900 font-semibold'>{teacher?.phoneNumber}</p>
                                                 </div>
 
                                                 <div className='flex align-items-center'>
