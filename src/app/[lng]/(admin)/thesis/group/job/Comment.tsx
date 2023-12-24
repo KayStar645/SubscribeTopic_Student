@@ -47,6 +47,7 @@ const JobComments = ({ onSubmit }: JobCommentsProps) => {
                     <InputTextarea
                         autoResize={true}
                         rows={2}
+                        value={content}
                         className='border-round-3xl flex-1 text-sm'
                         placeholder='Thêm nhận xét cho công việc'
                         onChange={(e) => setContent(e.target.value)}
@@ -59,9 +60,8 @@ const JobComments = ({ onSubmit }: JobCommentsProps) => {
                             rounded={true}
                             onClick={(e) => {
                                 e.preventDefault();
-
-                                onSubmit(content);
                                 setContent('');
+                                onSubmit(content);
                             }}
                         />
                     )}

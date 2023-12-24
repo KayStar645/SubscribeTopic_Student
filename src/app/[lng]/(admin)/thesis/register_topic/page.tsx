@@ -151,7 +151,7 @@ const RegisterTopicPage = ({ params: { lng } }: PageProps) => {
                         }}
                         header='Chuyên ngành phù hợp'
                         body={(data: TopicType) => <div>{data.thesisMajors?.map((t) => t.name).join(', ')}</div>}
-                    />
+                />
                     <Column
                         alignHeader='center'
                         headerStyle={{

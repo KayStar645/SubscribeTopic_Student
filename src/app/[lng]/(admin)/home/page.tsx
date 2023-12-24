@@ -212,7 +212,7 @@ const HomePage = ({ params: { lng } }: PageProps) => {
                 </div>
             </div>
 
-            <div style={{ minWidth: 400 }}>
+            <div style={{ width: 400 }}>
                 <Card title='Thông báo' subTitle='Thông báo mới từ khoa' className='mb-3'>
                     {notificationQuery.isFetching ? (
                         <div className='flex flex-column gap-3'>
